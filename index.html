@@ -1,0 +1,998 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Medapp Rob v29</title>
+<style>
+:root{--bg:#f6f7fb;--card:#ffffff;--text:#0b1220;--muted:rgba(11,18,32,.65);--border:rgba(11,18,32,.12);--shadow:0 10px 30px rgba(11,18,32,.08);--radius:16px;--t0800:#2b59ff;--t1200:#00b894;--t1600:#ff8a00;--t1800:#8e44ad;--t2200:#d63031;--day:#2b59ff;--accent:var(--t0800);}
+html[data-theme="dark"]{--bg:#0b1220;--card:#121c33;--text:#f2f5ff;--muted:rgba(242,245,255,.72);--border:rgba(242,245,255,.14);--shadow:0 12px 34px rgba(0,0,0,.35);--t0800:#7aa2ff;--t1200:#55efc4;--t1600:#ffb000;--t1800:#caa6ff;--t2200:#ff6b6b;--day:#7aa2ff;--accent:var(--t0800);}
+body{font-family:-apple-system,system-ui,Segoe UI,Roboto,sans-serif;margin:0;background:var(--bg);color:var(--text);}
+header{padding:14px 16px;position:sticky;top:0;z-index:5;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 14%,var(--bg)),var(--bg));backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
+h1{font-size:18px;margin:0;}
+main{padding:14px 16px 150px;max-width:860px;margin:0 auto;}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.card{border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin:12px 0;background:var(--card);box-shadow:var(--shadow);}
+.accentTop{position:relative;overflow:hidden;}
+.accentTop::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 85%,transparent),transparent);}
+.dayCard{border-color:color-mix(in srgb,var(--day) 60%,var(--border));background:linear-gradient(135deg,color-mix(in srgb,var(--day) 22%,var(--card)),var(--card));}
+.btn{border:1px solid var(--border);background:color-mix(in srgb,var(--card) 86%,transparent);padding:10px 12px;border-radius:12px;cursor:pointer;color:var(--text);}
+.btn.primary{border:1px solid color-mix(in srgb,var(--t0800) 55%,var(--border));background:color-mix(in srgb,var(--t0800) 18%,var(--card));font-weight:900;}
+.btn.big{padding:14px;border-radius:14px;font-size:15px;}
+.btn:disabled{opacity:.55;cursor:default;}
+.pill{border:1px solid var(--border);border-radius:999px;padding:6px 10px;font-size:12px;background:color-mix(in srgb,var(--card) 90%,transparent);}
+.pill.ok{border-color:color-mix(in srgb,var(--t1200) 60%,var(--border));}
+.pill.warn{border-color:color-mix(in srgb,var(--t1600) 70%,var(--border));}
+.pill.bad{border-color:color-mix(in srgb,var(--t2200) 70%,var(--border));}
+.sep{height:1px;background:var(--border);margin:12px 0;}
+.small{font-size:12px;}.muted{color:var(--muted);}
+input[type="date"],input[type="text"],input[type="tel"],input[type="number"],textarea,select{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:12px;padding:10px;font-size:14px;width:100%;box-sizing:border-box;}
+textarea{min-height:86px;resize:vertical;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+@media(max-width:720px){.grid3{grid-template-columns:1fr;}}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 0;}
+.tab{padding:8px 10px;border-radius:12px;border:1px solid var(--border);background:color-mix(in srgb,var(--card) 90%,transparent);cursor:pointer;font-size:12px;}
+.tab.active{border-color:color-mix(in srgb,var(--accent) 60%,var(--border));background:color-mix(in srgb,var(--accent) 16%,var(--card));font-weight:900;}
+.view{display:none;}.view.active{display:block;}
+.doseCard{position:relative;overflow:hidden;}
+.doseCard::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,color-mix(in srgb,var(--tone) 18%,transparent),color-mix(in srgb,var(--tone) 6%,transparent));pointer-events:none;}
+.doseInner{position:relative;z-index:2;}
+.gridDose{display:grid;grid-template-columns:92px 1fr auto;gap:12px;align-items:start;}
+.timeBox{font-weight:900;font-size:16px;padding:10px;border-radius:14px;text-align:center;border:1px solid color-mix(in srgb,var(--tone) 55%,var(--border));background:linear-gradient(135deg,color-mix(in srgb,var(--tone) 28%,var(--card)),color-mix(in srgb,var(--tone) 12%,var(--card)));}
+.icon{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:8px;border:1px solid color-mix(in srgb,var(--tone) 55%,var(--border));background:color-mix(in srgb,var(--tone) 12%,var(--card));margin-right:8px;font-size:14px;}
+input[type="checkbox"]{width:26px;height:26px;margin-top:6px;accent-color:var(--tone);}
+.toast{position:fixed;left:16px;right:16px;bottom:126px;background:rgba(10,10,14,.92);color:white;padding:10px 12px;border-radius:14px;display:none;z-index:10;}
+.modalWrap{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:18px;z-index:20;}
+.modal{width:100%;max-width:560px;background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:14px;}
+.modalTitle{font-weight:900;font-size:16px;margin:0;}
+.modalActions{margin-top:12px;display:flex;gap:10px;justify-content:flex-end;}
+footer{position:fixed;left:0;right:0;bottom:0;padding:10px 16px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 14%,var(--bg)),var(--bg));backdrop-filter:blur(10px);border-top:1px solid var(--border);z-index:5;}
+.badgeAll{display:none;}.badgeAll.show{display:inline-flex;}
+.streakBadge{font-size:28px;font-weight:900;text-align:center;padding:10px 0;}
+.painSlider{-webkit-appearance:none;width:100%;height:10px;border-radius:8px;outline:none;cursor:pointer;margin:10px 0;}
+.painSlider::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--card);}
+.moodBtn{font-size:32px;background:color-mix(in srgb,var(--card) 80%,transparent);border:2px solid var(--border);border-radius:14px;padding:6px 8px;cursor:pointer;flex:1;text-align:center;}
+.moodBtn.selected{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--card));}
+.afspraakCard{border:1px solid var(--border);border-radius:14px;padding:12px;margin:8px 0;background:var(--card);}
+.medPhotoGrid{display:flex;gap:10px;flex-wrap:wrap;}
+.medPhotoCard{border:1px solid var(--border);border-radius:14px;padding:10px;background:var(--card);width:120px;text-align:center;cursor:pointer;}
+.medPhotoCard img{width:100%;height:80px;object-fit:cover;border-radius:10px;display:block;}
+.medPhotoCard .medPhotoName{font-size:11px;margin-top:6px;color:var(--muted);}
+</style>
+</head>
+<body>
+<header>
+  <div class="row" style="justify-content:space-between;">
+    <h1>Medapp Rob</h1>
+    <div class="row">
+      <span class="pill ok badgeAll" id="badgeAll">Alles genomen</span>
+      <span class="pill" id="todayLabel"></span>
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" data-view="vandaag">Vandaag <span id="tabBadge" style="display:none;background:#d63031;color:#fff;border-radius:999px;padding:1px 6px;font-size:10px;font-weight:900;margin-left:2px">!</span></div>
+    <div class="tab" data-view="medisch">Medisch</div>
+    <div class="tab" data-view="nood">Noodinfo</div>
+    <div class="tab" data-view="assist">Assistent</div>
+    <div class="tab" data-view="gezondheid">Gezondheid &amp; Welzijn</div>
+        <div class="tab" data-view="afspraken">Afspraken</div>
+    <div class="tab" data-view="beheer">Beheer</div>
+  </div>
+</header>
+
+<main>
+  <div id="vandaag" class="view active">
+    <div class="card dayCard">
+      <div class="row" style="justify-content:space-between;">
+        <div style="min-width:200px;"><div class="muted small">Dag</div><input id="datePicker" type="date"/></div>
+        <div class="row">
+          <button class="btn" id="btnToday">Vandaag</button>
+          <button class="btn primary" id="btnNotify">Meldingen</button>
+          <button class="btn" id="btnNotWell">Niet goed</button>
+          <button class="btn" id="btnShiftTime">⏰ Verschuif</button>
+        </div>
+      </div>
+      <div class="sep"></div>
+      <div class="row" style="justify-content:space-between;">
+        <div style="flex:1;">
+          <div class="muted small">Eerstvolgende</div>
+          <div style="font-weight:900;font-size:16px;" id="nextDoseText">—</div>
+          <div class="muted small" id="nextDoseMeds"></div>
+        </div>
+        <button class="btn big primary" id="btnNow">NU INNEMEN</button>
+      </div>
+      <div class="sep"></div>
+      <div class="row" style="justify-content:space-between;align-items:end;">
+        <div class="row">
+          <span class="pill" id="statusPill">Status</span>
+          <span class="pill" id="modePill">Nachtmodus</span>
+        </div>
+        <div class="row" style="align-items:end;">
+          <div style="min-width:120px;"><div class="muted small">Waarschuwing</div><select id="warnSelect"><option value="0">Geen</option><option value="10">10 min</option><option value="30">30 min</option></select></div>
+          <div style="min-width:150px;"><div class="muted small">Nachtmodus</div><select id="themeSelect"><option value="auto">Auto</option><option value="auto20">Auto na 20:00</option><option value="dark">Aan</option><option value="light">Uit</option></select></div>
+          <div style="min-width:100px;"><div class="muted small">Geluid</div><select id="soundSelect"><option value="on">Aan</option><option value="vibrate">Trillen</option><option value="off">Uit</option></select></div>
+        </div>
+      </div>
+    </div>
+    <div id="list"></div>
+    <div class="card">
+      <div class="row" style="justify-content:space-between;"><div><div style="font-weight:900;">Export</div><div class="muted small">Geschiedenis</div></div><button class="btn" id="btnExport">Export CSV</button></div>
+    </div>
+    <div class="card accentTop">
+      <div class="row" style="justify-content:space-between;align-items:center;">
+        <div><div style="font-weight:900;">Inname streak 🔥</div><div class="muted small">Dagen op rij alles genomen</div></div>
+        <div class="streakBadge" id="streakBadgeVandaag">—</div>
+      </div>
+      <div class="sep"></div>
+      <div class="small" id="streakDotsMini" style="line-height:2;"></div>
+    </div>
+
+    <div class="card accentTop">
+      <div class="row" style="justify-content:space-between;align-items:center;">
+        <div><div style="font-weight:900;">📅 Maandoverzicht</div><div class="muted small" id="maandLabel"></div></div>
+        <div class="row"><button class="btn" id="btnPrevMaand">◀</button><button class="btn" id="btnNextMaand">▶</button></div>
+      </div>
+      <div class="sep"></div>
+      <div id="maandGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center;font-size:11px;"></div>
+      <div class="sep"></div>
+      <div class="row" style="flex-wrap:wrap;gap:5px;">
+        <span class="pill ok">✅ Alles</span>
+        <span class="pill warn">🟡 Deels</span>
+        <span class="pill bad">❌ Niks</span>
+        <span class="pill">⬜ Toekomst</span>
+      </div>
+    </div>
+  </div>
+
+  
+  <div id="medisch" class="view">
+    <div class="card accentTop"><div style="font-weight:900;">Medicatielijst en bijwerkingen</div><div class="sep"></div><div id="medList"></div></div>
+    <div class="card">
+      <div style="font-weight:900;">Foto per medicijn</div><div class="sep"></div>
+      <div class="medPhotoGrid" id="medPhotoGrid"></div>
+      <input type="file" id="medPhotoInput" accept="image/*" style="display:none;" capture="environment"/>
+    </div>
+    <div class="card">
+      <div style="font-weight:900;">Notities</div><div class="sep"></div>
+      <textarea id="notesMed" placeholder="Schrijf hier wat je wilt onthouden"></textarea>
+      <div class="row" style="justify-content:flex-end;margin-top:10px;"><button class="btn primary" id="btnSaveNotes">Opslaan</button></div>
+    </div>
+  </div>
+
+  <div id="nood" class="view">
+    <div class="card accentTop">
+      <div style="font-weight:900;">Noodinformatie</div><div class="muted small">Voor hulpdiensten</div><div class="sep"></div>
+      <div class="grid3">
+        <div><div class="muted small">Naam</div><input id="nfName" type="text" placeholder="Rob"/></div>
+        <div><div class="muted small">Geboortedatum</div><input id="nfDob" type="text" placeholder="dd-mm-jjjj"/></div>
+        <div><div class="muted small">Bloedgroep</div><input id="nfBlood" type="text" placeholder="Onbekend"/></div>
+      </div>
+      <div class="sep"></div>
+      <div class="grid3">
+        <div><div class="muted small">ICE 1 naam</div><input id="nfIce1" type="text"/></div>
+        <div><div class="muted small">Tel</div><input id="nfIce1Tel" type="tel"/></div>
+        <div><div class="muted small">Relatie</div><input id="nfIce1Rel" type="text" placeholder="Partner"/></div>
+      </div>
+      <div class="sep"></div>
+      <div class="grid3">
+        <div><div class="muted small">Huisarts</div><input id="nfGp" type="text"/></div>
+        <div><div class="muted small">Tel huisarts</div><input id="nfGpTel" type="tel"/></div>
+        <div><div class="muted small">Apotheek</div><input id="nfPharm" type="text"/></div>
+      </div>
+      <div class="sep"></div>
+      <div class="grid3">
+        <div><div class="muted small">Allergieën</div><textarea id="nfAllergy"></textarea></div>
+        <div><div class="muted small">Diagnoses</div><textarea id="nfDx"></textarea></div>
+        <div><div class="muted small">Extra info</div><textarea id="nfExtra"></textarea></div>
+      </div>
+      <div class="row" style="justify-content:flex-end;margin-top:10px;"><button class="btn primary" id="btnSaveNf">Opslaan</button></div>
+    </div>
+    <div class="card">
+      <div style="font-weight:900;">Overzicht</div><div class="sep"></div>
+      <div id="nfSummary" class="small"></div>
+      <div class="sep"></div>
+      <div class="row" style="justify-content:flex-end;"><button class="btn" id="btnCopyNoodkaart">Kopieer noodkaart</button></div>
+      <pre id="noodkaartText" class="small" style="white-space:pre-wrap;margin:0;"></pre>
+    </div>
+  </div>
+
+  <div id="assist" class="view">
+    <div class="card accentTop">
+      <div style="font-weight:900;">Assistent</div><div class="sep"></div>
+      <div class="row" style="align-items:end;flex-wrap:wrap;gap:10px;">
+        <div style="min-width:160px;"><div class="muted small">Auto alarm</div><select id="autoAlarmSelect"><option value="off">Uit</option><option value="on">Aan</option></select></div>
+        <div style="min-width:120px;"><div class="muted small">Snooze</div><select id="snoozeSelect"><option value="5">5 min</option><option value="10" selected>10 min</option><option value="15">15 min</option></select></div>
+        <div style="min-width:160px;"><div class="muted small">Alarm interval</div><select id="smartSelect"><option value="3">3 sec</option><option value="5" selected>5 sec</option><option value="8">8 sec</option></select></div>
+      </div>
+      <div class="sep"></div>
+      <div class="row"><button class="btn primary" id="btnTestAlarm">Test</button><button class="btn" id="btnStopAlarm">Stop</button><button class="btn" id="btnSnooze">Snooze</button><button class="btn" id="btnCallIce">Bel Lizet</button><button class="btn" id="btnAgenda">ICS export</button></div>
+      <div class="sep"></div>
+      <div id="assistNowTitle" style="font-weight:900;"></div>
+      <div id="assistNowText" class="muted small"></div>
+    </div>
+    <div class="card"><div style="font-weight:900;">Controlelijst</div><div class="sep"></div><div id="assistChecklist" class="small"></div></div>
+    <div class="card">
+      <div style="font-weight:900;">Voortgang</div><div class="sep"></div>
+      <div class="row" style="flex-wrap:wrap;gap:8px;">
+        <span class="pill" id="weekScoreAssist">Week: 0%</span>
+        <span class="pill" id="streakPill">Streak: 0 dagen</span>
+      </div>
+      <div class="sep"></div>
+      <div id="weekDots" class="small" style="line-height:1.9;"></div>
+      <div class="sep"></div>
+      <div id="topMissed" class="small"></div>
+    </div>
+    <div class="card">
+      <div style="font-weight:900;">Snelle acties</div><div class="sep"></div>
+      <div class="row" style="flex-wrap:wrap;">
+        <button class="btn primary" id="btnMarkNow">Alles voor nu afvinken</button>
+        <button class="btn" id="btnShareReport">Deel rapport</button>
+        <button class="btn" id="btnCopyReport">Kopieer rapport</button>
+      </div>
+    </div>
+    <div class="card accentTop">
+      <div style="font-weight:900;">📊 Weekrapport</div><div class="sep"></div>
+      <div id="weekRapportBox" class="small" style="white-space:pre-wrap;line-height:1.8;"></div>
+      <div class="row" style="justify-content:flex-end;margin-top:10px;gap:8px;">
+        <button class="btn" id="btnWeekRapportCopy">Kopieer</button>
+        <button class="btn primary" id="btnWeekRapportShare">📤 Deel</button>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-weight:900;">Notities</div><div class="sep"></div>
+      <div class="grid3">
+        <div><div class="muted small">Tijdstip</div><select id="noteTimeSelect"></select></div>
+        <div style="grid-column:span 2;"><div class="muted small">Notitie</div><textarea id="noteText" placeholder="Bijv. duizelig..."></textarea></div>
+      </div>
+      <div class="row" style="justify-content:flex-end;margin-top:10px;"><button class="btn primary" id="btnSaveNote">Opslaan</button></div>
+      <div class="sep"></div>
+      <div id="noteList" class="small"></div>
+    </div>
+    <div class="card">
+      <div style="font-weight:900;">Backup</div><div class="sep"></div>
+      <div class="row" style="flex-wrap:wrap;">
+        <button class="btn" id="btnBackupExport">Export backup</button>
+        <label class="btn" for="backupImport" style="cursor:pointer;">Import backup</label>
+        <input id="backupImport" type="file" accept="application/json" style="display:none;"/>
+      </div>
+      <div class="sep"></div>
+      <div class="row" style="justify-content:space-between;align-items:center;">
+        <span>Dagelijkse auto-backup</span>
+        <input type="checkbox" id="autoBackupToggle" style="width:26px;height:26px;" onchange="toggleAutoBackup(this.checked)"/>
+      </div>
+      <div class="sep"></div>
+      <div id="autoBackupStatus" class="small">Laden...</div>
+      <div class="row" style="justify-content:flex-end;margin-top:10px;"><button class="btn primary" onclick="autoBackupNow()">Nu backup</button></div>
+    </div>
+  </div>
+
+  
+  <div id="gezondheid" class="view">
+    <div class="card accentTop">
+      <div style="font-weight:900;">Gezondheid log</div><div class="sep"></div>
+      <div class="grid3">
+        <div><div class="muted small">Slaap 1-10</div><input id="healthSleep" type="number" min="1" max="10" inputmode="numeric"/></div>
+        <div><div class="muted small">CPAP uren</div><input id="healthCpap" type="number" step="0.1" inputmode="decimal"/></div>
+        <div><div class="muted small">Pijn rug 1-10</div><input id="healthPain" type="number" min="1" max="10" inputmode="numeric"/></div>
+      </div>
+      <div class="grid3" style="margin-top:10px;">
+        <div><div class="muted small">RLS 1-10</div><input id="healthRls" type="number" min="1" max="10" inputmode="numeric"/></div>
+        <div><div class="muted small">CPAP AHI</div><input id="healthAhi" type="number" step="0.1" inputmode="decimal" placeholder="bijv. 4.2"/></div>
+        <div><div class="muted small">Gewicht (kg)</div><input id="healthWeight" type="number" step="0.1" inputmode="decimal" placeholder="bijv. 82.5"/></div>
+        <div style="grid-column:span 2;"><div class="muted small">Triggers</div><input id="healthTriggers" placeholder="Bijv. koffie, stress"/></div>
+      </div>
+      <div class="row" style="justify-content:flex-end;margin-top:10px;"><button class="btn primary" id="btnSaveHealth">Opslaan</button></div>
+      <div class="sep"></div>
+      <div id="healthStatus" class="small"></div>
+    </div>
+    <div class="card"><div style="font-weight:900;">Laatste 7 dagen</div><div class="sep"></div><div id="healthList"></div></div>
+  
+
+    <div class="card accentTop">
+      <div style="font-weight:900;">Pijnlogger</div><div class="sep"></div>
+      <div class="row" style="justify-content:space-between;align-items:center;">
+        <div class="muted small">Datum</div><span class="pill" id="painDateLabel"></span>
+      </div>
+      <div style="margin:14px 0;">
+        <div class="row" style="justify-content:space-between;margin-bottom:4px;">
+          <span class="muted small">Geen pijn</span>
+          <span style="font-weight:900;font-size:24px;" id="painValDisplay">—</span>
+          <span class="muted small">Ondraaglijk</span>
+        </div>
+        <input type="range" min="1" max="10" value="5" class="painSlider" id="painSlider"/>
+      </div>
+      <input type="text" id="painNote" placeholder="Locatie / opmerking"/>
+      <div class="row" style="justify-content:flex-end;margin-top:10px;"><button class="btn primary" id="btnSavePain">Opslaan</button></div>
+    </div>
+    <div class="card">
+      <div style="font-weight:900;">Laatste 14 dagen</div><div class="sep"></div>
+      <div style="display:flex;gap:4px;align-items:flex-end;height:60px;margin-bottom:8px;" id="painBarChart"></div>
+      <div class="sep"></div>
+      <div id="painHistory" class="small"></div>
+    </div>
+    <div class="card"><div style="font-weight:900;">Statistieken</div><div class="sep"></div><div id="painStats" class="small"></div></div>
+    <div class="card accentTop" style="background:color-mix(in srgb,var(--t1800) 8%,var(--card));">
+      <div style="font-weight:900;">😄 Stemming &amp; Energie</div><div class="sep"></div>
+      <div style="display:flex;gap:8px;justify-content:space-between;margin-bottom:8px;">
+        <button class="moodBtn" data-val="1" onclick="pickMood(1)">😢</button>
+        <button class="moodBtn" data-val="2" onclick="pickMood(2)">😞</button>
+        <button class="moodBtn" data-val="3" onclick="pickMood(3)">😐</button>
+        <button class="moodBtn" data-val="4" onclick="pickMood(4)">🙂</button>
+        <button class="moodBtn" data-val="5" onclick="pickMood(5)">😄</button>
+      </div>
+      <div class="muted small" style="text-align:center;margin-bottom:12px;" id="moodLabel">Tik op een emoji</div>
+      <div class="muted small">Energie <span id="energyValDisplay" style="font-weight:900;color:var(--accent);">5</span>/10</div>
+      <input type="range" min="1" max="10" value="5" class="painSlider" id="energySlider" oninput="document.getElementById('energyValDisplay').textContent=this.value"/>
+      <input type="text" id="stemmingNote" placeholder="Notitie..."/>
+      <div class="row" style="justify-content:flex-end;margin-top:10px;"><button class="btn primary" onclick="saveStemming()">Opslaan</button></div>
+    </div>
+    <div class="card">
+      <div style="font-weight:900;">Stemming 14 dagen</div><div class="sep"></div>
+      <div id="stemmingBarWrap" style="display:flex;gap:4px;align-items:flex-end;height:80px;margin-bottom:8px;"></div>
+      <div class="sep"></div>
+      <div id="stemmingHistory" class="small"></div>
+    </div>
+  
+  
+    <div class="card accentTop">
+      <div style="font-weight:900;">📈 AHI grafiek <span class="muted small">(30 dagen)</span></div>
+      <div class="sep"></div>
+      <div id="ahiChartWrap" style="display:flex;gap:3px;align-items:flex-end;height:80px;margin-bottom:4px;"></div>
+      <div class="sep"></div>
+      <div id="ahiStats" class="small muted"></div>
+    </div>
+    <div class="card accentTop">
+      <div style="font-weight:900;">⚖️ Gewicht grafiek <span class="muted small">(30 dagen)</span></div>
+      <div class="sep"></div>
+      <div id="weightChartWrap" style="display:flex;gap:3px;align-items:flex-end;height:80px;margin-bottom:4px;"></div>
+      <div class="sep"></div>
+      <div id="weightStats" class="small muted"></div>
+    </div>
+  </div>
+  <div id="afspraken" class="view">
+    <div class="card accentTop">
+      <div style="font-weight:900;">Afspraken</div><div class="sep"></div>
+      <div class="grid3">
+        <div><div class="muted small">Datum</div><input type="date" id="afsDatum"/></div>
+        <div><div class="muted small">Tijd</div><input type="text" id="afsTijd" placeholder="10:30"/></div>
+        <div><div class="muted small">Arts</div><input type="text" id="afsArts" placeholder="Huisarts"/></div>
+      </div>
+      <div style="margin-top:10px;"><textarea id="afsNota" placeholder="Onderwerp..."></textarea></div>
+      <div class="row" style="justify-content:flex-end;margin-top:10px;"><button class="btn primary" id="btnSaveAfs">Opslaan</button></div>
+    </div>
+    <div class="card"><div style="font-weight:900;">Komend</div><div class="sep"></div><div id="afsListKomend" class="small"></div></div>
+    <div class="card"><div style="font-weight:900;">Voorbij</div><div class="sep"></div><div id="afsListVoorbij" class="small"></div></div>
+    <div class="card">
+      <div style="font-weight:900;">Export</div><div class="sep"></div>
+      <div class="row"><button class="btn" id="btnAfsPDF">Download HTML</button><button class="btn" id="btnAfsCopy">Kopieer</button></div>
+    </div>
+  </div>
+
+  <div id="beheer" class="view">
+    <div class="card accentTop">
+      <div style="font-weight:900;">Medicijn toevoegen</div><div class="sep"></div>
+      <div class="grid3">
+        <div><div class="muted small">Tijdstip</div><input type="text" id="bTime" placeholder="08:00" inputmode="numeric"/></div>
+        <div style="grid-column:span 2"><div class="muted small">Naam &amp; dosering</div><input type="text" id="bName" placeholder="Bijv. Paracetamol 500 mg, 2 stuks"/></div>
+      </div>
+      <div class="grid3" style="margin-top:8px">
+        <div>
+          <div class="muted small">Schema</div>
+          <select id="bRule">
+            <option value="daily">Dagelijks</option>
+            <option value="weekly">Wekelijks</option>
+          </select>
+        </div>
+        <div id="bDaysWrap" style="grid-column:span 2;display:none">
+          <div class="muted small">Dagen</div>
+          <div class="row" style="flex-wrap:wrap;gap:5px;margin-top:4px">
+            <label class="pill"><input type="checkbox" value="1" style="width:14px;height:14px;margin-right:3px"> Ma</label>
+            <label class="pill"><input type="checkbox" value="2" style="width:14px;height:14px;margin-right:3px"> Di</label>
+            <label class="pill"><input type="checkbox" value="3" style="width:14px;height:14px;margin-right:3px"> Wo</label>
+            <label class="pill"><input type="checkbox" value="4" style="width:14px;height:14px;margin-right:3px"> Do</label>
+            <label class="pill"><input type="checkbox" value="5" style="width:14px;height:14px;margin-right:3px"> Vr</label>
+            <label class="pill"><input type="checkbox" value="6" style="width:14px;height:14px;margin-right:3px"> Za</label>
+            <label class="pill"><input type="checkbox" value="0" style="width:14px;height:14px;margin-right:3px"> Zo</label>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="justify-content:flex-end;margin-top:10px">
+        <button class="btn primary" id="btnBeheerAdd">Toevoegen</button>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-weight:900;">Huidige medicijnen</div><div class="sep"></div>
+      <div id="beheerList"></div>
+    </div>
+    <div class="card">
+      <div style="font-weight:900;">Let op</div><div class="sep"></div>
+      <div class="small muted">Wijzigingen gaan direct in. Eerdere innamegeschiedenis blijft bewaard. Wil je een medicijn tijdelijk overslaan, gebruik dan de checkbox op het Vandaag-tabblad.</div>
+    </div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+<div class="modalWrap" id="modalWrap">
+  <div class="modal">
+    <div class="row" style="justify-content:space-between;"><p class="modalTitle" id="modalTitle"></p><span class="pill" id="modalPill"></span></div>
+    <div class="sep"></div>
+    <div id="modalBody" class="small"></div>
+    <div class="modalActions"><button class="btn" id="modalNo">Nog niet</button><button class="btn primary" id="modalYes">Ja, genomen</button></div>
+  </div>
+</div>
+<footer>
+  <div class="row" style="justify-content:space-between;">
+    <div class="small muted" id="nextFooter"></div>
+    <div class="row"><button class="btn" id="btnReschedule">Herplan</button><button class="btn" id="btnReset">Reset</button></div>
+  </div>
+</footer>
+
+<script>
+const DEFAULT_SCHEDULE=[
+  {time:"08:00",items:["Gabapentine 300 mg, 2 stuks","Amlodipine 5 mg, 1 stuk","Pantoprazol 40 mg, 1 stuk","Citalopram 10 mg, 1 stuk"],rule:{type:"daily"}},
+  {time:"08:00",items:["Risedrononzuur 35 mg, 1 stuk"],rule:{type:"weekly",by:[3]}},
+  {time:"12:00",items:["Vitamine D3 en K2, 1 stuk"],rule:{type:"daily"}},
+  {time:"12:00",items:["Calcium citraat 500 mg, 2 stuks"],rule:{type:"weekly",by:[0,1,2,4,5,6]}},
+  {time:"16:00",items:["Pramipexol 0,125 mg, 2 stuks","Gabapentine 300 mg, 2 stuks"],rule:{type:"daily"}},
+  {time:"18:00",items:["Pramipexol 0,125 mg, 2 stuks"],rule:{type:"daily"}},
+  {time:"22:00",items:["Pramipexol 0,125 mg, 1 stuk","Gabapentine 300 mg, 2 stuks","Magnesium tauraat met P5P, 1 stuk"],rule:{type:"daily"}},
+];
+function loadSchedule(){try{const s=localStorage.getItem("schedule:v1");return s?JSON.parse(s):DEFAULT_SCHEDULE;}catch(e){return DEFAULT_SCHEDULE;}}
+function saveSchedule(s){localStorage.setItem("schedule:v1",JSON.stringify(s));}
+let schedule=loadSchedule();
+const medInfo=[
+  {name:"Pramipexol",why:"Restless legs",common:"Misselijkheid, slaperigheid, duizeligheid",serious:"Flauwvallen, plots in slaap vallen, verwardheid"},
+  {name:"Gabapentine",why:"Zenuwpijn, restless legs",common:"Sufheid, duizeligheid, moeheid",serious:"Huiduitslag met zwelling, ernstige somberheid"},
+  {name:"Amlodipine",why:"Hoge bloeddruk",common:"Hoofdpijn, blozen, dikke enkels",serious:"Pijn op de borst, flauwvallen"},
+  {name:"Pantoprazol",why:"Maagbescherming",common:"Hoofdpijn, diarree, misselijkheid",serious:"Ernstige diarree, geelzucht"},
+  {name:"Citalopram",why:"Depressie, angst",common:"Misselijkheid, droge mond, slapeloosheid",serious:"Hevige onrust, koorts, spiertrekkingen"},
+  {name:"Risedrononzuur",why:"Osteoporose",common:"Buikpijn, maagklachten, hoofdpijn",serious:"Pijn bij slikken, kaakproblemen"},
+  {name:"Calcium citraat",why:"Botten",common:"Maagklachten, verstopping",serious:"Nierstenen klachten"},
+  {name:"Magnesium tauraat met P5P",why:"Aanvulling",common:"Diarree of maagklachten",serious:"Heftige zwakte bij te hoge dosering"},
+  {name:"Vitamine D3 en K2",why:"Botten",common:"Soms maagklachten",serious:"Veel dorst, veel plassen, misselijkheid"},
+];
+
+function getItemIcon(name){
+  const n=(name||"").toLowerCase();
+  const supplements=["vitamine","calcium","magnesium","zink","omega","probio","ijzer","foliumzuur","b12","c ","d3","k2","supplement","kruid","spirulina","kurkuma","collageen","melatonine"];
+  for(const s of supplements){if(n.includes(s))return"🌿";}
+  return"💊";
+}
+
+const el=id=>document.getElementById(id);
+function ymd(d){const z=new Date(d.getTime()-d.getTimezoneOffset()*60000);return z.toISOString().slice(0,10);}
+function fmtDate(d){return d.toLocaleDateString("nl-NL",{weekday:"long",year:"numeric",month:"long",day:"numeric"});}
+function fmtDateNL(s){try{return new Date(s+"T00:00:00").toLocaleDateString("nl-NL",{weekday:"long",year:"numeric",month:"long",day:"numeric"});}catch(e){return s;}}
+function parseTimeToDate(dateObj,hhmm){const[h,m]=hhmm.split(":").map(Number);const d=new Date(dateObj);d.setHours(h,m,0,0);return d;}
+function ruleApplies(dateObj,rule){const dow=dateObj.getDay();if(rule.type==="daily")return true;if(rule.type==="weekly")return rule.by.includes(dow);return false;}
+function _getDosesBase(dateObj){const doses=[];for(const b of schedule){if(ruleApplies(dateObj,b.rule))doses.push({time:b.time,items:b.items.slice()});}doses.sort((a,b)=>a.time.localeCompare(b.time));const merged=[];for(const d of doses){const last=merged[merged.length-1];if(last&&last.time===d.time)last.items.push(...d.items);else merged.push({time:d.time,items:d.items.slice()});}return merged;}
+function toneForTime(t){const m={"08:00":"var(--t0800)","12:00":"var(--t1200)","16:00":"var(--t1600)","18:00":"var(--t1800)","22:00":"var(--t2200)"};return m[t]||"var(--t0800)";}
+function iconForTime(t){const m={"08:00":"☀️","12:00":"🥪","16:00":"🌤️","18:00":"🌆","22:00":"🌙"};return m[t]||"⏰";}
+function keyFor(y,t){return"taken:"+y+":"+t;}
+function readTaken(y,t){return localStorage.getItem(keyFor(y,t))==="1";}
+function setTaken(y,t,v){localStorage.setItem(keyFor(y,t),v?"1":"0");}
+function escapeHtml(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function toast(msg){const t=el("toast");t.textContent=msg;t.style.display="block";clearTimeout(window.__tt);window.__tt=setTimeout(()=>t.style.display="none",1800);}
+function applyTheme(mode){const root=document.documentElement;const h=new Date().getHours();if(mode==="auto")root.dataset.theme=(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light";else if(mode==="auto20")root.dataset.theme=(h>=20||h<6)?"dark":"light";else if(mode==="dark")root.dataset.theme="dark";else root.dataset.theme="light";el("modePill").textContent=root.dataset.theme==="dark"?"Nachtmodus aan":"Nachtmodus uit";el("modePill").className="pill "+(root.dataset.theme==="dark"?"ok":"");}
+function getSettings(){return{warnMin:Number(localStorage.getItem("settings:warnMin")||"10"),theme:localStorage.getItem("settings:theme")||"auto20",sound:localStorage.getItem("settings:sound")||"on"};}
+function saveSettings(s){localStorage.setItem("settings:warnMin",String(s.warnMin));localStorage.setItem("settings:theme",s.theme);localStorage.setItem("settings:sound",s.sound);}
+function findNextOpenDose(dateObj){const doses=getDosesForDate(dateObj);const day=ymd(dateObj);const now=new Date();for(const d of doses){if(readTaken(day,d.time))continue;const due=parseTimeToDate(dateObj,d.time);if(ymd(now)===day){if(due>=now)return{...d,due};}else return{...d,due};}return null;}
+function renderBadgeAll(dateObj){const doses=getDosesForDate(dateObj);const day=ymd(dateObj);const done=doses.length>0&&doses.every(d=>readTaken(day,d.time));el("badgeAll").className="pill ok badgeAll "+(done?"show":"");}
+function renderToday(){const dateObj=new Date(el("datePicker").value+"T00:00:00");const doses=getDosesForDate(dateObj);const list=el("list");list.innerHTML="";el("todayLabel").textContent=fmtDate(dateObj);const day=ymd(dateObj);const doneCount=doses.filter(d=>readTaken(day,d.time)).length;const status=doneCount===0?"Nog niks afgevinkt":(doneCount===doses.length?"Alles genomen":(doneCount+" van "+doses.length+" afgevinkt"));el("statusPill").textContent=status;el("statusPill").className="pill "+(doneCount===doses.length?"ok":(doneCount===0?"warn":""));renderBadgeAll(dateObj);renderStreakVandaag();const next=findNextOpenDose(dateObj);if(!next){el("nextDoseText").textContent="Geen open doses";el("nextDoseMeds").textContent="";el("btnNow").disabled=true;el("nextFooter").textContent="Geen open doses";}else{const when=next.due.toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"});el("nextDoseText").textContent=iconForTime(next.time)+" "+when;el("nextDoseMeds").textContent=next.items.join(", ");el("btnNow").disabled=false;el("nextFooter").textContent="Volgende: "+when;el("btnNow").onclick=()=>{setTaken(day,next.time,true);toast("Afgevinkt: "+next.time);renderAll();scheduleInAppNotifications();};}
+for(const d of doses){const checked=readTaken(day,d.time);const tone=toneForTime(d.time);const card=document.createElement("div");card.className="card doseCard";card.style.setProperty("--tone",tone);const inner=document.createElement("div");inner.className="doseInner";const grid=document.createElement("div");grid.className="gridDose";const timeBox=document.createElement("div");timeBox.className="timeBox";timeBox.textContent=d.time;const dose=document.createElement("div");dose.innerHTML="<div><span class='icon'>"+iconForTime(d.time)+"</span><span style='font-weight:900;'>Medicatie</span></div>"+d.items.map(x=>"<div>"+getItemIcon(x)+" "+escapeHtml(x)+"</div>").join("");const cb=document.createElement("input");cb.type="checkbox";cb.checked=checked;cb.addEventListener("change",()=>{setTaken(day,d.time,cb.checked);renderAll();scheduleInAppNotifications();});grid.appendChild(timeBox);grid.appendChild(dose);grid.appendChild(cb);inner.appendChild(grid);const now=new Date();const due=parseTimeToDate(dateObj,d.time);if(ymd(now)===day&&due<now&&!checked){const warn=document.createElement("div");warn.className="small";warn.style.marginTop="10px";warn.innerHTML="<span class='pill bad'>Te laat</span> <span class='muted'>voor dit tijdstip</span>";inner.appendChild(warn);}if(checked){const ok=document.createElement("div");ok.className="small";ok.style.marginTop="10px";ok.innerHTML="<span class='pill ok'>Genomen</span>";inner.appendChild(ok);}card.appendChild(inner);list.appendChild(card);}}
+function renderAll(){const s=getSettings();applyTheme(s.theme);renderToday();renderNfSummary();computeWeekScore();updateTabBadge();renderMaandGrid();if(window.__activeView==="gezondheid")renderGezondheid();updateWidgetDataStorage();if(window.__activeView==="assist")try{renderWeekRapport();}catch(e){}}
+function resetToday(){const dateObj=new Date(el("datePicker").value+"T00:00:00");const doses=getDosesForDate(dateObj);const day=ymd(dateObj);for(const d of doses)localStorage.removeItem(keyFor(day,d.time));toast("Reset gedaan");renderAll();scheduleInAppNotifications();}
+function exportCSV(){const rows=[["datum","tijd","genomen","middelen"]];const keys=Object.keys(localStorage).filter(k=>k.startsWith("taken:")).sort();for(const k of keys){const v=localStorage.getItem(k);const parts=k.split(":");const date=parts[1];const time=parts.slice(2).join(":");const dateObj=new Date(date+"T00:00:00");const doses=getDosesForDate(dateObj);const block=doses.find(x=>x.time===time);const meds=block?block.items.join(" | "):"";rows.push([date,time,v==="1"?"ja":"nee",meds]);}const csv=rows.map(r=>r.map(cell=>{const s=String(cell??"");if(s.includes(";")||s.includes('"')||s.includes("\n"))return'"'+s.replace(/"/g,'""')+'"';return s;}).join(";")).join("\n");const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="medicatie.csv";a.click();URL.revokeObjectURL(a.href);}
+async function enableNotifications(){if(!("Notification"in window)){toast("Meldingen niet ondersteund");return;}const perm=await Notification.requestPermission();if(perm!=="granted"){toast("Geen toestemming");return;}localStorage.setItem("settings:notifEnabled","1");toast("Meldingen aan");scheduleInAppNotifications();}
+function vibrate(){try{if(navigator.vibrate)navigator.vibrate([90,60,90]);}catch(e){}}
+function beepForTime(hhmm){const s=getSettings();if(s.sound!=="on")return;const f={"08:00":880,"12:00":740,"16:00":660,"18:00":580,"22:00":440};try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const o=ctx.createOscillator();const g=ctx.createGain();o.type="sine";o.frequency.value=f[hhmm]||700;g.gain.value=0.08;o.connect(g);g.connect(ctx.destination);o.start();setTimeout(()=>{o.stop();ctx.close();},220);}catch(e){}}
+function showAfvinkModal(day,time,items){el("modalTitle").textContent="Heb je "+time+" al genomen";el("modalBody").innerHTML=items.map(x=>"<div>"+escapeHtml(x)+"</div>").join("");el("modalWrap").style.display="flex";const close=()=>{el("modalWrap").style.display="none";};el("modalNo").onclick=()=>close();el("modalYes").onclick=()=>{setTaken(day,time,true);close();toast("Afgevinkt: "+time);renderAll();scheduleInAppNotifications();};}
+function scheduleInAppNotifications(){for(const t of(window.__notifTimers||[]))clearTimeout(t);window.__notifTimers=[];const enabled=localStorage.getItem("settings:notifEnabled")==="1";if(!enabled)return;const settings=getSettings();const dateObj=new Date(el("datePicker").value+"T00:00:00");const day=ymd(dateObj);const now=new Date();if(ymd(now)!==day)return;const doses=getDosesForDate(dateObj);for(const d of doses){if(readTaken(day,d.time))continue;const due=parseTimeToDate(dateObj,d.time);const msDue=due-now;if(settings.warnMin>0){const msWarn=(due.getTime()-settings.warnMin*60000)-now;if(msWarn>0){const tw=setTimeout(()=>{vibrate();beepForTime(d.time);try{new Notification("Over "+settings.warnMin+" min: "+d.time,{body:d.items.join(", ")});}catch(e){}toast("Waarschuwing: "+d.time);},msWarn);window.__notifTimers.push(tw);}}if(msDue>0){const td=setTimeout(()=>{vibrate();beepForTime(d.time);try{new Notification("Medicatie "+d.time,{body:d.items.join(", ")});}catch(e){}toast("Tijd: "+d.time);if(!readTaken(day,d.time))showAfvinkModal(day,d.time,d.items);},msDue);window.__notifTimers.push(td);}}}
+function mondayOfWeek(dateObj){const d=new Date(dateObj);const day=d.getDay();d.setDate(d.getDate()+(day===0?-6:1-day));d.setHours(0,0,0,0);return d;}
+let weekOffset=0;
+function renderWeek(){const base=new Date();base.setDate(base.getDate()+weekOffset*7);const mon=mondayOfWeek(base);const days=[];for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);days.push(d);}el("weekLabel").textContent=days[0].toLocaleDateString("nl-NL",{day:"2-digit",month:"2-digit"})+" tot "+days[6].toLocaleDateString("nl-NL",{day:"2-digit",month:"2-digit",year:"numeric"});const wrap=el("weekWrap");wrap.innerHTML="";for(const d of days){const doses=getDosesForDate(d);const day=ymd(d);const done=doses.filter(x=>readTaken(day,x.time)).length;const total=doses.length;const pct=total===0?0:Math.round((done/total)*100);const card=document.createElement("div");card.className="card";card.style.padding="12px";card.innerHTML="<div class='row' style='justify-content:space-between;'><div><div style='font-weight:900;'>"+escapeHtml(d.toLocaleDateString("nl-NL",{weekday:"long"}))+"</div><div class='muted small'>"+escapeHtml(day)+"</div></div><span class='pill "+(pct===100?"ok":(pct===0?"warn":""))+"'>"+done+"/"+total+"</span></div><div class='small' style='margin-top:8px;'>"+doses.map(x=>"<div>"+(readTaken(day,x.time)?"✅":"⬜")+" "+escapeHtml(x.time)+"</div>").join("")+"</div>";wrap.appendChild(card);}}
+function renderMedList(){const wrap=el("medList");wrap.innerHTML="";for(const m of medInfo){const card=document.createElement("div");card.className="card";card.style.padding="12px";card.innerHTML="<div style='font-weight:900;'>"+getItemIcon(m.name)+" "+escapeHtml(m.name)+"</div><div class='muted small'>"+escapeHtml(m.why)+"</div><div class='sep'></div><div class='small'><span class='pill'>Vaak</span> "+escapeHtml(m.common)+"</div><div class='small' style='margin-top:8px;'><span class='pill bad'>Direct contact</span> "+escapeHtml(m.serious)+"</div>";wrap.appendChild(card);}}
+function saveNotes(){localStorage.setItem("notes:med",el("notesMed").value||"");toast("Opgeslagen");}
+function loadNotes(){el("notesMed").value=localStorage.getItem("notes:med")||"";}
+function saveNf(){const data={name:el("nfName").value,dob:el("nfDob").value,blood:el("nfBlood").value,ice1:el("nfIce1").value,ice1tel:el("nfIce1Tel").value,ice1rel:el("nfIce1Rel")?el("nfIce1Rel").value:"",ice2:el("nfIce2")?el("nfIce2").value:"",ice2tel:el("nfIce2Tel")?el("nfIce2Tel").value:"",gp:el("nfGp").value,gptel:el("nfGpTel").value,pharm:el("nfPharm").value,allergy:el("nfAllergy").value,dx:el("nfDx").value,extra:el("nfExtra").value};localStorage.setItem("noodinfo:v1",JSON.stringify(data));toast("Noodinfo opgeslagen");renderNfSummary();}
+function loadNf(){const raw=localStorage.getItem("noodinfo:v1");if(!raw){el("nfName").value="Rob";el("nfBlood").value="Onbekend";el("nfAllergy").value="Geen";el("nfDx").value="RLS\nOsteoporose\nSlaap Apneu";return;}try{const d=JSON.parse(raw);el("nfName").value=d.name||"Rob";el("nfDob").value=d.dob||"";el("nfBlood").value=d.blood||"Onbekend";el("nfIce1").value=d.ice1||"";el("nfIce1Tel").value=d.ice1tel||"";if(el("nfIce1Rel"))el("nfIce1Rel").value=d.ice1rel||"";if(el("nfIce2"))el("nfIce2").value=d.ice2||"";if(el("nfIce2Tel"))el("nfIce2Tel").value=d.ice2tel||"";el("nfGp").value=d.gp||"";el("nfGpTel").value=d.gptel||"";el("nfPharm").value=d.pharm||"";el("nfAllergy").value=d.allergy||"";el("nfDx").value=d.dx||"RLS\nOsteoporose\nSlaap Apneu";el("nfExtra").value=d.extra||"";}catch(e){}}
+function renderNfSummary(){const raw=localStorage.getItem("noodinfo:v1");let d={};try{d=raw?JSON.parse(raw):{};}catch(e){}const lines=[];lines.push("Naam: "+(d.name||"Rob"));if(d.dob)lines.push("Geboortedatum: "+d.dob);if(d.blood)lines.push("Bloedgroep: "+d.blood);if(d.ice1||d.ice1tel)lines.push("ICE 1: "+(d.ice1||"")+" "+(d.ice1tel||""));if(d.gp||d.gptel)lines.push("Huisarts: "+(d.gp||"")+" "+(d.gptel||""));if(d.allergy)lines.push("Allergieën: "+d.allergy);if(d.dx)lines.push("Diagnoses: "+d.dx);lines.push("");lines.push("Medicatie vandaag:");const today=new Date(el("datePicker").value+"T00:00:00");for(const b of getDosesForDate(today))lines.push(b.time+": "+b.items.join(", "));const nfSummary=el("nfSummary");if(nfSummary)nfSummary.innerHTML=lines.map(x=>"<div>"+escapeHtml(x)+"</div>").join("");const noodkaartText=el("noodkaartText");if(noodkaartText){const nl=["NOODKAART","Naam: "+(d.name||"Rob")];if(d.dob)nl.push("Geb: "+d.dob);if(d.blood)nl.push("Bloedgroep: "+d.blood);if(d.dx)nl.push("Diagnoses: "+d.dx.replace(/\n/g,", "));if(d.allergy)nl.push("Allergieën: "+d.allergy);if(d.ice1)nl.push("ICE: "+d.ice1+", "+d.ice1tel);nl.push("Medicatie: "+[...new Set(medInfo.map(m=>m.name))].join(", "));noodkaartText.textContent=nl.join("\n");}}
+function setAccent(view){const map={vandaag:"var(--t0800)",week:"var(--t1200)",medisch:"var(--t1600)",nood:"var(--t2200)",assist:"var(--t1600)",voorraad:"var(--t1200)",gezondheid:"var(--t1800)",welzijn:"var(--t1800)",afspraken:"var(--t0800)"};document.documentElement.style.setProperty("--accent",map[view]||"var(--t0800)");document.documentElement.style.setProperty("--day",map[view]||"var(--t0800)");}
+function switchView(name){window.__activeView=name;setAccent(name);for(const v of document.querySelectorAll(".view"))v.classList.remove("active");const target=el(name);if(target)target.classList.add("active");for(const t of document.querySelectorAll(".tab"))t.classList.toggle("active",t.dataset.view===name);if(name==="medisch"){renderMedList();loadNotes();}if(name==="nood"){loadNf();renderNfSummary();}if(name==="gezondheid"){renderGezondheid();renderAhiChart();renderWeightChart();try{renderPijn();}catch(e){}try{renderStemming();}catch(e){}}if(name==="afspraken"){try{afsRender();}catch(e){}}
+  if(name==="beheer"){try{renderBeheerList();}catch(e){}}if(name==="assist"){try{updateAssistantUI();}catch(e){}try{renderWeekRapport();}catch(e){}}}
+function computeDayScore(dateObj){const doses=getDosesForDate(dateObj);const day=ymd(dateObj);const done=doses.filter(x=>readTaken(day,x.time)).length;const total=doses.length;return{done,total,pct:total===0?0:Math.round((done/total)*100)};}
+function computeStreakDays(){const now=new Date();let streak=0;for(let i=0;i<365;i++){const d=new Date(now);d.setDate(now.getDate()-i);const score=computeDayScore(d);if(score.total===0)continue;if(score.pct===100)streak++;else break;}return streak;}
+function renderStreakVandaag(){const badge=el("streakBadgeVandaag");const dots=el("streakDotsMini");if(!badge)return;const streak=computeStreakDays();badge.textContent=streak>0?"🔥 "+streak:"0";if(dots){const today=new Date();const parts=[];for(let i=6;i>=0;i--){const d=new Date(today);d.setDate(today.getDate()-i);const s=computeDayScore(d);const label=d.toLocaleDateString("nl-NL",{weekday:"short"});const icon=s.total===0?"⬜":s.pct===100?"✅":s.pct>=50?"🟡":"❌";parts.push("<span class='pill'>"+escapeHtml(label)+" "+icon+"</span>");}dots.innerHTML=parts.join(" ");}}
+function computeWeekScore(){const mon=mondayOfWeek(new Date());let done=0,total=0;for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);const doses=getDosesForDate(d);const day=ymd(d);total+=doses.length;done+=doses.filter(x=>readTaken(day,x.time)).length;}const pct=total===0?0:Math.round((done/total)*100);const ws=el("weekScore");if(ws)ws.textContent="Weekscore: "+pct+"%. "+done+" van "+total+" afgevinkt.";renderProgressExtras();}
+function computeRangeScore(daysBack){const now=new Date();let done=0,total=0;for(let i=0;i<daysBack;i++){const d=new Date(now);d.setDate(now.getDate()-i);const doses=getDosesForDate(d);const day=ymd(d);total+=doses.length;done+=doses.filter(x=>readTaken(day,x.time)).length;}return{done,total,pct:total===0?0:Math.round((done/total)*100)};}
+function renderProgressExtras(){try{const streak=computeStreakDays();if(el("streakPill"))el("streakPill").textContent="Streak: "+streak+" dagen";if(el("weekDots")){const now=new Date();const out=[];for(let i=6;i>=0;i--){const d=new Date(now);d.setDate(now.getDate()-i);const s=computeDayScore(d);const cls=s.pct===100?"pill ok":s.pct===0?"pill warn":"pill";out.push("<span class='"+cls+"'>"+escapeHtml(d.toLocaleDateString("nl-NL",{weekday:"short"}))+" "+s.pct+"%</span>");}el("weekDots").innerHTML=out.join(" ");}if(el("topMissed")){const now=new Date();const counts={};for(let i=0;i<30;i++){const d=new Date(now);d.setDate(now.getDate()-i);const day=ymd(d);for(const b of getDosesForDate(d))if(!readTaken(day,b.time))counts[b.time]=(counts[b.time]||0)+1;}const items=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,3);el("topMissed").innerHTML=items.length?"Top gemist: "+items.map(x=>escapeHtml(x[0])+" "+x[1]+"x").join(", "):"Top gemist: geen";}buildNoteTimeOptions();loadNoteForSelected();renderNoteList();}catch(e){}}
+function buildWeekReportText(){const mon=mondayOfWeek(new Date());const lines=["Weekrapport medicatie"];for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);const doses=getDosesForDate(d);const day=ymd(d);const done=doses.filter(x=>readTaken(day,x.time)).length;const pct=doses.length===0?0:Math.round((done/doses.length)*100);lines.push(d.toLocaleDateString("nl-NL",{weekday:"long",day:"2-digit",month:"2-digit"})+". "+pct+"%. "+done+" van "+doses.length);}lines.push("Streak: "+computeStreakDays()+" dagen");return lines.join("\n");}
+async function shareWeekReport(){const text=buildWeekReportText();try{if(navigator.share){await navigator.share({title:"Weekrapport",text});toast("Gedeeld");return;}}catch(e){}await copyText(text);toast("Gekopieerd");}
+async function copyText(text){const t=String(text||"");try{if(navigator.clipboard){await navigator.clipboard.writeText(t);return true;}}catch(e){}const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand("copy");}catch(e){}document.body.removeChild(ta);return true;}
+function markAllForNow(){const dateObj=new Date(el("datePicker").value+"T00:00:00");const day=ymd(dateObj);const now=new Date();let c=0;for(const d of getDosesForDate(dateObj)){const due=parseTimeToDate(dateObj,d.time);if(due<=now&&!readTaken(day,d.time)){setTaken(day,d.time,true);c++;}}toast(c?"Afgevinkt: "+c+" momenten":"Niks te doen");renderAll();scheduleInAppNotifications();}
+function noteKey(day,time){return"note:"+day+":"+time;}
+function buildNoteTimeOptions(){const sel=el("noteTimeSelect");if(!sel)return;const dateObj=new Date(el("datePicker").value+"T00:00:00");const doses=getDosesForDate(dateObj);const current=sel.value||"";sel.innerHTML="";for(const d of doses){const opt=document.createElement("option");opt.value=d.time;opt.textContent=d.time;sel.appendChild(opt);}if(current)sel.value=current;}
+function loadNoteForSelected(){const sel=el("noteTimeSelect");const txt=el("noteText");if(!sel||!txt)return;const day=ymd(new Date(el("datePicker").value+"T00:00:00"));txt.value=localStorage.getItem(noteKey(day,sel.value))||"";}
+function saveSelectedNote(){const sel=el("noteTimeSelect");const txt=el("noteText");if(!sel||!txt)return;const day=ymd(new Date(el("datePicker").value+"T00:00:00"));localStorage.setItem(noteKey(day,sel.value),txt.value||"");toast("Notitie opgeslagen");renderNoteList();}
+function renderNoteList(){const box=el("noteList");if(!box)return;const day=ymd(new Date(el("datePicker").value+"T00:00:00"));const lines=[];for(const d of getDosesForDate(new Date(el("datePicker").value+"T00:00:00"))){const t=(localStorage.getItem(noteKey(day,d.time))||"").trim();if(!t)continue;lines.push("<div><span class='pill'>"+escapeHtml(d.time)+"</span> "+escapeHtml(t)+"</div>");}box.innerHTML=lines.length?lines.join(""):"Geen notities voor deze dag";}
+function exportBackup(){const data={version:"v29",exportedAt:new Date().toISOString(),storage:{}};for(const k of Object.keys(localStorage))data.storage[k]=localStorage.getItem(k);const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="medicatie-rob-backup.json";a.click();URL.revokeObjectURL(a.href);toast("Backup geëxporteerd");}
+function importBackupFile(file){
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const raw=String(r.result||"{}");
+      const data=JSON.parse(raw);
+      if(!data||!data.storage||typeof data.storage!=="object"){
+        toast("Backup bestand is ongeldig");return;
+      }
+      const count=Object.keys(data.storage).length;
+      if(count===0){toast("Backup is leeg");return;}
+      localStorage.clear();
+      for(const k of Object.keys(data.storage)){
+        localStorage.setItem(k,String(data.storage[k]));
+      }
+      const verify=Object.keys(localStorage).length;
+      toast("Geïmporteerd ✅ "+verify+" items — pagina herlaadt...");
+      setTimeout(()=>location.reload(),1200);
+    }catch(e){
+      toast("Fout bij import: "+e.message);
+    }
+  };
+  r.onerror=()=>toast("Bestand kon niet worden gelezen");
+  r.readAsText(file);
+}
+function autoBackupNow(){try{const data={version:"v29",exportedAt:new Date().toISOString(),storage:{}};for(const k of Object.keys(localStorage))data.storage[k]=localStorage.getItem(k);const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="medapp-backup-"+new Date().toISOString().slice(0,10)+".json";a.click();URL.revokeObjectURL(a.href);localStorage.setItem("autobackup:lastdate",ymd(new Date()));toast("Backup gemaakt ✅");updateAutoBackupStatus();}catch(e){toast("Backup mislukt");}}
+function toggleAutoBackup(checked){localStorage.setItem("autobackup:enabled",checked?"1":"0");toast(checked?"Auto-backup aan ✅":"Auto-backup uit");updateAutoBackupStatus();}
+function updateAutoBackupStatus(){const box=el("autoBackupStatus");if(!box)return;const on=localStorage.getItem("autobackup:enabled")==="1";const last=localStorage.getItem("autobackup:lastdate")||"Nog nooit";box.innerHTML="Status: <strong>"+(on?"Aan ✅":"Uit")+"</strong> — Laatste: <strong>"+escapeHtml(last)+"</strong>";const tog=el("autoBackupToggle");if(tog)tog.checked=on;}
+function checkAutoBackup(){if(localStorage.getItem("autobackup:enabled")!=="1")return;if(localStorage.getItem("autobackup:lastdate")!==ymd(new Date()))setTimeout(autoBackupNow,3000);}
+let __alarmTimer=null,__alarmCtx=null,__alarmVolume=0.02,__alarmFreq=700,__alarmForTime=null,__snoozeUntil=null;
+function stopSmartAlarm(){if(__alarmTimer){clearInterval(__alarmTimer);__alarmTimer=null;}try{if(__alarmCtx)__alarmCtx.close();}catch(e){}__alarmCtx=null;__alarmVolume=0.02;__alarmFreq=700;__alarmForTime=null;try{speechSynthesis.cancel();}catch(e){}toast("Alarm uit");}
+function speakRob(msg){try{const u=new SpeechSynthesisUtterance(msg);u.lang="nl-NL";speechSynthesis.speak(u);}catch(e){}}
+function smartBeepStep(){const s=getSettings();if(s.sound==="off")return;if(s.sound==="on"){if(!__alarmCtx)__alarmCtx=new(window.AudioContext||window.webkitAudioContext)();const o=__alarmCtx.createOscillator();const g=__alarmCtx.createGain();o.type="square";o.frequency.value=__alarmFreq;g.gain.value=__alarmVolume;o.connect(g);g.connect(__alarmCtx.destination);o.start();o.stop(__alarmCtx.currentTime+0.45);}__alarmVolume=Math.min(__alarmVolume+0.02,0.28);__alarmFreq=Math.min(__alarmFreq+25,1100);try{if(navigator.vibrate)navigator.vibrate([220,120,220]);}catch(e){}if(s.sound==="on")speakRob(__alarmForTime?"Rob, medicatie tijd "+__alarmForTime:"Rob, medicatie tijd");}
+function startSmartAlarm(forTime){__alarmForTime=forTime||null;stopSmartAlarm();const step=Number(el("smartSelect")?.value||"5");__alarmForTime=forTime||null;toast("Alarm start");smartBeepStep();__alarmTimer=setInterval(()=>smartBeepStep(),step*1000);}
+function snoozeAlarm(){const mins=Number(el("snoozeSelect")?.value||"10");__snoozeUntil=Date.now()+mins*60*1000;stopSmartAlarm();toast("Snooze "+mins+" min");}
+function updateAssistantUI(){const dateObj=new Date(el("datePicker").value+"T00:00:00");el("assistChecklist").innerHTML=getDosesForDate(dateObj).map(d=>"<div>"+(readTaken(ymd(dateObj),d.time)?"✅":"⬜")+" "+escapeHtml(d.time)+" "+d.items.map(x=>getItemIcon(x)+" "+escapeHtml(x)).join(", ")+"</div>").join("");const next=findNextOpenDose(dateObj);if(!next){el("assistNowTitle").textContent="Alles afgevinkt";el("assistNowText").textContent="Je bent klaar voor vandaag";}else{const when=next.due.toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"});el("assistNowTitle").textContent="Volgende: "+when;el("assistNowText").textContent=next.items.join(", ");}const ws=el("weekScoreAssist");if(ws){const mon=mondayOfWeek(new Date());let done=0,total=0;for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);const day=ymd(d);const doses=getDosesForDate(d);total+=doses.length;done+=doses.filter(x=>readTaken(day,x.time)).length;}ws.textContent="Week: "+(total===0?0:Math.round((done/total)*100))+"%";}}
+function autoAlarmTick(){if((localStorage.getItem("assist:autoAlarm")||"off")!=="on")return;const dateObj=new Date(el("datePicker").value+"T00:00:00");const day=ymd(dateObj);const now=new Date();if(ymd(now)!==day)return;if(__snoozeUntil&&Date.now()<__snoozeUntil)return;const next=findNextOpenDose(dateObj);if(!next)return;if(next.due<=now&&!__alarmTimer)startSmartAlarm(next.time);}
+function remindMissedDose(){if((localStorage.getItem("assist:autoAlarm")||"off")!=="on")return;const dateObj=new Date(el("datePicker").value+"T00:00:00");const day=ymd(dateObj);const now=new Date();if(ymd(now)!==day)return;const next=findNextOpenDose(dateObj);if(!next)return;if(next.due<=now){const k="miss:"+day+":"+next.time;const last=Number(localStorage.getItem(k)||"0");const since=now.getTime()-next.due.getTime();if(since>=15*60*1000&&last<15){localStorage.setItem(k,"15");toast("Herinnering: "+next.time);startSmartAlarm(next.time);}if(since>=30*60*1000&&last<30){localStorage.setItem(k,"30");toast("Laatste herinnering: "+next.time);startSmartAlarm(next.time);}}}
+function setupAssistant(){const saved=localStorage.getItem("assist:autoAlarm")||"off";el("autoAlarmSelect").value=saved;el("autoAlarmSelect").addEventListener("change",()=>{localStorage.setItem("assist:autoAlarm",el("autoAlarmSelect").value);toast("Auto alarm "+(el("autoAlarmSelect").value==="on"?"aan":"uit"));});el("btnTestAlarm").addEventListener("click",()=>startSmartAlarm("test"));el("btnStopAlarm").addEventListener("click",stopSmartAlarm);el("btnSnooze").addEventListener("click",snoozeAlarm);el("btnCallIce").addEventListener("click",()=>{window.location.href="tel:0620739584";});el("btnAgenda").addEventListener("click",()=>openICS());if(el("btnMarkNow"))el("btnMarkNow").addEventListener("click",markAllForNow);if(el("btnShareReport"))el("btnShareReport").addEventListener("click",shareWeekReport);if(el("btnCopyReport"))el("btnCopyReport").addEventListener("click",()=>{copyText(buildWeekReportText());toast("Gekopieerd");});if(el("btnSaveNote"))el("btnSaveNote").addEventListener("click",saveSelectedNote);if(el("noteTimeSelect"))el("noteTimeSelect").addEventListener("change",loadNoteForSelected);if(el("btnBackupExport"))el("btnBackupExport").addEventListener("click",exportBackup);if(el("backupImport"))el("backupImport").addEventListener("change",(ev)=>{const f=ev.target.files&&ev.target.files[0];if(f)importBackupFile(f);ev.target.value="";});setInterval(()=>autoAlarmTick(),1000);setInterval(()=>updateAssistantUI(),5000);updateAssistantUI();}
+function icsEscape(s){return String(s||"").replace(/\\/g,"\\\\").replace(/\n/g,"\\n").replace(/,/g,"\\,").replace(/;/g,"\\;");}
+function openICS(){const warnMin=Number(el("warnSelect")?.value||"10");const lines=[];lines.push("BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Medapp Rob v29//NL","CALSCALE:GREGORIAN");function addEvent(uid,title,rrule,hhmm,desc){const dtstamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z$/,"Z");const start="20260228T"+hhmm.replace(":","")+"00";lines.push("BEGIN:VEVENT","UID:"+uid,"DTSTAMP:"+dtstamp,"DTSTART:"+start,"RRULE:"+rrule,"SUMMARY:"+icsEscape(title));if(desc)lines.push("DESCRIPTION:"+icsEscape(desc));lines.push("BEGIN:VALARM",warnMin>0?"TRIGGER:-PT"+warnMin+"M":"TRIGGER:PT0M","ACTION:DISPLAY","DESCRIPTION:"+icsEscape(title),"END:VALARM","END:VEVENT");}addEvent("rob-med-0800@local","Medicatie 08:00","FREQ=DAILY","0800","Gabapentine 300mg 2, Amlodipine 5mg, Pantoprazol 40mg, Citalopram 10mg");addEvent("rob-med-1200@local","Medicatie 12:00","FREQ=DAILY","1200","Vitamine D3+K2, Calcium citraat");addEvent("rob-med-1600@local","Medicatie 16:00","FREQ=DAILY","1600","Pramipexol 0,125mg 2, Gabapentine 300mg 2");addEvent("rob-med-1800@local","Medicatie 18:00","FREQ=DAILY","1800","Pramipexol 0,125mg 2");addEvent("rob-med-2200@local","Medicatie 22:00","FREQ=DAILY","2200","Pramipexol 0,125mg, Gabapentine 300mg 2, Magnesium tauraat+P5P");addEvent("rob-med-risedro@local","Risedrononzuur wo 08:00","FREQ=WEEKLY;BYDAY=WE","0800","Risedrononzuur 35mg - lege maag, water, 30 min rechtop");addEvent("rob-med-calcium@local","Calcium 12:00","FREQ=WEEKLY;BYDAY=MO,TU,TH,FR,SA,SU","1200","Calcium citraat 500mg 2");lines.push("END:VCALENDAR");const blob=new Blob([lines.join("\r\n")],{type:"text/calendar;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="medicatie-rob.ics";a.click();URL.revokeObjectURL(a.href);toast("ICS gedownload");}
+function slugifyName(s){return String(s||"").toLowerCase().trim().replace(/&/g," en ").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");}
+function stockKeyForMedName(name){return"stock:med:"+slugifyName(name);}
+function stockWarnKeyForMedName(name){return"stock:warn:"+slugifyName(name);}
+function stockReadAll(){const map={};for(const m of medInfo){const v=Number(localStorage.getItem(stockKeyForMedName(m.name))||"0");map[m.name]=isFinite(v)?v:0;}return map;}
+function stockWriteAll(map){for(const m of medInfo){const v=Number(map[m.name]||0);localStorage.setItem(stockKeyForMedName(m.name),String(isFinite(v)?v:0));}}
+function stockReadWarnAll(){const map={};for(const m of medInfo){const v=Number(localStorage.getItem(stockWarnKeyForMedName(m.name))||"14");map[m.name]=isFinite(v)?v:14;}return map;}
+function stockWriteWarnAll(map){for(const m of medInfo){const v=Number(map[m.name]??14);localStorage.setItem(stockWarnKeyForMedName(m.name),String(isFinite(v)&&v>0?Math.round(v):14));}}
+function stockLogRead(){try{return JSON.parse(localStorage.getItem("stock:filllog:v1")||"[]");}catch(e){return[];}}
+function stockLogWrite(list){localStorage.setItem("stock:filllog:v1",JSON.stringify(list.slice(0,200)));}
+function stockLogAdd(entry){const list=stockLogRead();list.unshift(entry);stockLogWrite(list);}
+function stockRunoutDate(days){const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+Number(days||0));return ymd(d);}
+function stockEnsureAllUi(){const wrap=el("stockAllWrap");if(!wrap||wrap.dataset.built==="1")return;wrap.dataset.built="1";wrap.innerHTML="";for(const m of medInfo){const slug=slugifyName(m.name);const box=document.createElement("div");box.innerHTML="<div class='muted small'>"+escapeHtml(m.name)+"</div><input id='stock_"+slug+"' type='text' inputmode='numeric' placeholder='bijv. 14'/><div class='muted small' style='margin-top:6px;'>Waarschuw onder</div><input id='stockw_"+slug+"' type='text' inputmode='numeric' placeholder='14'/><div class='row' style='justify-content:flex-end;margin-top:8px;'><button class='btn' id='stockfill_"+slug+"'>Aangevuld</button></div><div class='small' id='stockinfo_"+slug+"' style='margin-top:6px;'></div>";wrap.appendChild(box);}}
+function stockSaveFromUi(){stockEnsureAllUi();const map={},wmap={};for(const m of medInfo){const slug=slugifyName(m.name);map[m.name]=Number(el("stock_"+slug)?el("stock_"+slug).value:"0")||0;const w=Number(el("stockw_"+slug)?el("stockw_"+slug).value:"14");wmap[m.name]=isFinite(w)&&w>0?Math.round(w):14;}stockWriteAll(map);stockWriteWarnAll(wmap);stockRenderAll();}
+function stockRenderAll(){stockEnsureAllUi();const map=stockReadAll(),wmap=stockReadWarnAll();for(const m of medInfo){const slug=slugifyName(m.name);const inp=el("stock_"+slug),winp=el("stockw_"+slug);if(inp){const v=Number(map[m.name]||0);inp.value=v?String(v):"";}if(winp){winp.value=String(wmap[m.name]??14);}const info=el("stockinfo_"+slug);if(info){const days=Number(map[m.name]||0);info.textContent=days>0?"Op: "+fmtDateNL(stockRunoutDate(days)):"Niet ingevuld";}const btn=el("stockfill_"+slug);if(btn&&!btn.dataset.bound){btn.dataset.bound="1";btn.onclick=()=>{const cur=Number(el("stock_"+slug).value||"0")||0;const v=prompt("Nieuwe dagvoorraad voor "+m.name+":",cur?String(cur):"");if(v===null)return;const n=Number(String(v).replace(",","."));if(!isFinite(n)||n<0){alert("Vul een getal in.");return;}el("stock_"+slug).value=String(Math.round(n));stockSaveFromUi();stockLogAdd({ts:Date.now(),name:m.name,days:Math.round(n)});stockRenderAll();};}}const warn=[],order=[];let soonCount=0;for(const m of medInfo){const days=Number(map[m.name]||0);const w=Number(wmap[m.name]??14);if(days&&days<=5)warn.push(m.name+" nog "+days+" dagen");if(days){if(days<=w)order.push({name:m.name,days,warn:w});if(days<=14)soonCount++;}}if(el("stockAllStatus"))el("stockAllStatus").textContent=warn.length?"Waarschuwing: "+warn.join(", "):"Geen waarschuwingen";if(el("stockOrderPill"))el("stockOrderPill").textContent="Bestellen: "+order.length;if(el("stockSoonPill"))el("stockSoonPill").textContent="Binnen 14 dagen: "+soonCount;if(el("stockOrderList")){if(order.length===0)el("stockOrderList").textContent="Geen medicijnen onder drempel.";else el("stockOrderList").textContent=order.sort((a,b)=>a.days-b.days).map(x=>x.name+": nog "+x.days+" dagen (op "+fmtDateNL(stockRunoutDate(x.days))+")").join("\n");}if(el("stockLogList")){const list=stockLogRead().slice(0,25);if(list.length===0)el("stockLogList").textContent="Nog geen leveringen.";else el("stockLogList").textContent=list.map(x=>fmtDateNL(ymd(new Date(x.ts||Date.now())))+": "+x.name+" naar "+x.days+" dagen").join("\n");}}
+function renderUsage(){if(!el("useTodayPill"))return;const t=computeDayScore(new Date());const s30=computeRangeScore(30);const s365=computeRangeScore(365);el("useTodayPill").textContent="Vandaag: "+t.pct+"%";el("use30Pill").textContent="30 dagen: "+s30.pct+"%";el("use365Pill").textContent="365 dagen: "+s365.pct+"%";if(el("useDetails"))el("useDetails").textContent="Vandaag "+t.done+" van "+t.total+". 30 dagen "+s30.done+" van "+s30.total+". 365 dagen "+s365.done+" van "+s365.total+".";}
+function renderVoorraad(){stockRenderAll();renderUsage();updateWidgetDataStorage();if(window.__activeView==="assist")try{renderWeekRapport();}catch(e){}}
+function healthKey(day){return"health:"+day;}
+function healthRead(day){try{const r=localStorage.getItem(healthKey(day));return r?JSON.parse(r):null;}catch(e){return null;}}
+function healthWrite(day,obj){try{localStorage.setItem(healthKey(day),JSON.stringify(obj||{}));}catch(e){}}
+function renderGezondheid(){
+  const day=el("datePicker")?el("datePicker").value:ymd(new Date());
+  const h=healthRead(day)||{};
+  if(el("healthSleep"))el("healthSleep").value=h.sleep??"";
+  if(el("healthCpap"))el("healthCpap").value=h.cpap??"";
+  if(el("healthPain"))el("healthPain").value=h.pain??"";
+  if(el("healthRls"))el("healthRls").value=h.rls??"";if(el("healthAhi"))el("healthAhi").value=h.ahi??"";if(el("healthWeight"))el("healthWeight").value=h.weight??"";
+  if(el("healthTriggers"))el("healthTriggers").value=h.triggers??"";
+  const status=el("healthStatus");
+  if(status)status.textContent=(h&&(h.sleep!=null||h.cpap!=null||h.pain!=null))?"Opgeslagen voor "+day+".":"Nog geen log voor "+day+".";
+  const list=el("healthList");if(!list)return;
+  const rows=[];
+  for(let i=0;i<7;i++){
+    const d=new Date(day+"T00:00:00");d.setDate(d.getDate()-i);
+    const di=ymd(d);const hx=healthRead(di)||{};
+    const extra=hx.triggers?", "+escapeHtml(String(hx.triggers)):"";
+    rows.push('<div style="border:1px solid var(--border);border-radius:12px;padding:10px;margin:8px 0;display:grid;grid-template-columns:120px 1fr;gap:6px"><div style="font-weight:800">'+escapeHtml(di)+'</div><div class="muted small">Slaap '+(hx.sleep??"-")+' CPAP '+(hx.cpap??"-")+' Pijn '+(hx.pain??"-")+' RLS '+(hx.rls??"-")+' AHI '+(hx.ahi??"-")+' ⚖️ '+(hx.weight??"-")+'kg'+extra+'</div></div>');
+  }
+  list.innerHTML=rows.join("");
+}
+function saveGezondheid(){const day=el("datePicker")?el("datePicker").value:ymd(new Date());function numOrNull(v,min,max){const s=String(v||"").replace(",",".").trim();if(!s)return null;const n=Number(s);if(Number.isNaN(n))return null;if(min!=null&&n<min)return min;if(max!=null&&n>max)return max;return n;}healthWrite(day,{sleep:el("healthSleep")?numOrNull(el("healthSleep").value,1,10):null,cpap:el("healthCpap")?numOrNull(el("healthCpap").value,0,24):null,pain:el("healthPain")?numOrNull(el("healthPain").value,1,10):null,rls:el("healthRls")?numOrNull(el("healthRls").value,1,10):null,ahi:el("healthAhi")?numOrNull(el("healthAhi").value,0,100):null,weight:el("healthWeight")?numOrNull(el("healthWeight").value,20,300):null,triggers:el("healthTriggers")?String(el("healthTriggers").value||"").trim():""});toast("Gezondheid opgeslagen");renderGezondheid();}
+function buildWidgetData(){const today=computeDayScore(new Date());const mon=mondayOfWeek(new Date());let wkDone=0,wkTotal=0;for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);const day=ymd(d);const doses=getDosesForDate(d);wkTotal+=doses.length;wkDone+=doses.filter(x=>readTaken(day,x.time)).length;}return{updatedAt:new Date().toISOString(),today:{pct:today.pct,done:today.done,total:today.total},week:{pct:wkTotal===0?0:Math.round((wkDone/wkTotal)*100)},streakDays:computeStreakDays()};}
+function updateWidgetDataStorage(){try{localStorage.setItem("widget:data",JSON.stringify(buildWidgetData()));}catch(e){}}
+function painKey(day){return"pain:"+day;}
+function painRead(day){try{const r=localStorage.getItem(painKey(day));return r?JSON.parse(r):null;}catch(e){return null;}}
+function painWrite(day,obj){try{localStorage.setItem(painKey(day),JSON.stringify(obj));}catch(e){}}
+function updatePainDisplay(val){const disp=el("painValDisplay");if(!disp)return;const emojis=["","😊","😊","😐","😐","😟","😟","😣","😣","😤","😱"];disp.textContent=val+" "+(emojis[val]||"");disp.style.color=val<=3?"var(--t1200)":val<=6?"var(--t1600)":"var(--t2200)";}
+function renderPainBarChart(){const wrap=el("painBarChart");if(!wrap)return;wrap.innerHTML="";const today=new Date();for(let i=13;i>=0;i--){const d=new Date(today);d.setDate(today.getDate()-i);const h=painRead(ymd(d));const val=h?h.val:0;const label=d.toLocaleDateString("nl-NL",{weekday:"short"}).slice(0,2);const col=document.createElement("div");col.style.cssText="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;";const bar=document.createElement("div");const barH=val>0?Math.max(4,Math.round((val/10)*54)):4;bar.style.cssText="width:100%;height:"+barH+"px;border-radius:4px 4px 0 0;background:"+(val>0?(val<=3?"var(--t1200)":val<=6?"var(--t1600)":"var(--t2200)"):"var(--border)")+";";const lbl=document.createElement("div");lbl.style.cssText="font-size:9px;color:var(--muted);text-align:center;";lbl.textContent=label;col.appendChild(bar);col.appendChild(lbl);wrap.appendChild(col);}}
+function renderPainHistory(){const box=el("painHistory");if(!box)return;const today=new Date();const rows=[];for(let i=0;i<14;i++){const d=new Date(today);d.setDate(today.getDate()-i);const di=ymd(d);const h=painRead(di);if(!h)continue;const col=h.val<=3?"var(--t1200)":h.val<=6?"var(--t1600)":"var(--t2200)";rows.push("<div class='row' style='gap:8px;margin:4px 0;'><span class='pill' style='border-color:"+col+";'>"+escapeHtml(di)+"</span><span style='font-weight:900;color:"+col+";'>"+h.val+"/10</span>"+(h.note?" <span class='muted'>"+escapeHtml(h.note)+"</span>":"")+"</div>");}box.innerHTML=rows.length?rows.join(""):"<span class='muted'>Nog geen pijn gelogd</span>";}
+function renderPainStats(){const box=el("painStats");if(!box)return;const today=new Date();const vals=[];for(let i=0;i<30;i++){const d=new Date(today);d.setDate(today.getDate()-i);const h=painRead(ymd(d));if(h&&h.val>0)vals.push(h.val);}if(vals.length===0){box.textContent="Geen data voor de laatste 30 dagen";return;}const avg=(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1);box.innerHTML="Laatste 30 dagen: "+vals.length+" registraties<br/>Gemiddelde: "+avg+"/10<br/>Hoogste: "+Math.max(...vals)+"/10<br/>Laagste: "+Math.min(...vals)+"/10";}
+function renderPijn(){const day=el("datePicker")?el("datePicker").value:ymd(new Date());if(el("painDateLabel"))el("painDateLabel").textContent=fmtDateNL(day);const saved=painRead(day);const slider=el("painSlider");if(slider){slider.value=saved?String(saved.val):"5";updatePainDisplay(Number(slider.value));}if(el("painNote"))el("painNote").value=saved?(saved.note||""):"";renderPainBarChart();renderPainHistory();renderPainStats();}
+function initPijn(){const slider=el("painSlider");if(slider)slider.addEventListener("input",()=>updatePainDisplay(Number(slider.value)));if(el("btnSavePain"))el("btnSavePain").addEventListener("click",()=>{const day=el("datePicker")?el("datePicker").value:ymd(new Date());const val=Number(el("painSlider").value);const note=(el("painNote").value||"").trim();painWrite(day,{val,note});toast("Pijn opgeslagen: "+val+"/10");renderPijn();});}
+let __selectedMood=0;
+const moodEmoji=["","😢","😞","😐","🙂","😄"];
+const moodLabels=["","Heel slecht","Niet goed","Matig","Goed","Uitstekend"];
+function pickMood(val){__selectedMood=val;document.querySelectorAll(".moodBtn").forEach(b=>b.classList.toggle("selected",Number(b.dataset.val)===val));const lbl=el("moodLabel");if(lbl)lbl.textContent=moodLabels[val];}
+function saveStemming(){const day=el("datePicker")?el("datePicker").value:ymd(new Date());if(!__selectedMood){alert("Kies eerst een emoji");return;}const energy=el("energySlider")?Number(el("energySlider").value):5;const note=el("stemmingNote")?(el("stemmingNote").value||"").trim():"";localStorage.setItem("stemming:"+day,JSON.stringify({mood:__selectedMood,energy,note}));toast("Stemming opgeslagen "+moodEmoji[__selectedMood]);renderStemming();}
+function renderStemming(){if(!el("moodLabel"))return;const day=el("datePicker")?el("datePicker").value:ymd(new Date());let saved=null;try{const r=localStorage.getItem("stemming:"+day);saved=r?JSON.parse(r):null;}catch(e){}__selectedMood=saved?(saved.mood||0):0;if(el("energySlider"))el("energySlider").value=saved?String(saved.energy||5):"5";if(el("energyValDisplay"))el("energyValDisplay").textContent=saved?String(saved.energy||5):"5";if(el("stemmingNote"))el("stemmingNote").value=saved?(saved.note||""):"";el("moodLabel").textContent=__selectedMood?moodLabels[__selectedMood]:"Tik op een emoji";document.querySelectorAll(".moodBtn").forEach(b=>b.classList.toggle("selected",Number(b.dataset.val)===__selectedMood));const wrap=el("stemmingBarWrap");if(wrap){wrap.innerHTML="";const today=new Date();for(let i=13;i>=0;i--){const d=new Date(today);d.setDate(today.getDate()-i);let s=null;try{const r=localStorage.getItem("stemming:"+ymd(d));s=r?JSON.parse(r):null;}catch(e){}const mood=s?(s.mood||0):0,energy=s?(s.energy||0):0;const label=d.toLocaleDateString("nl-NL",{weekday:"short"}).slice(0,2);const col=document.createElement("div");col.style.cssText="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;justify-content:flex-end;height:72px;";if(mood>0){const mb=document.createElement("div");mb.style.cssText="width:44%;height:"+Math.max(4,Math.round((mood/5)*34))+"px;border-radius:3px 3px 0 0;background:var(--t1800);display:inline-block;";col.appendChild(mb);}if(energy>0){const eb=document.createElement("div");eb.style.cssText="width:44%;height:"+Math.max(4,Math.round((energy/10)*34))+"px;border-radius:3px 3px 0 0;background:var(--t1200);display:inline-block;";col.appendChild(eb);}if(!mood&&!energy){const em=document.createElement("div");em.style.cssText="width:80%;height:4px;border-radius:3px;background:var(--border);";col.appendChild(em);}const lbl=document.createElement("div");lbl.style.cssText="font-size:9px;color:var(--muted);text-align:center;margin-top:2px;width:100%;";lbl.textContent=label;col.appendChild(lbl);wrap.appendChild(col);}}const hist=el("stemmingHistory");if(hist){const today=new Date();const rows=[];for(let i=0;i<14;i++){const d=new Date(today);d.setDate(today.getDate()-i);let s=null;try{const r=localStorage.getItem("stemming:"+ymd(d));s=r?JSON.parse(r):null;}catch(e){}if(!s||(!s.mood&&!s.energy))continue;const dl=d.toLocaleDateString("nl-NL",{weekday:"short",day:"2-digit",month:"2-digit"});rows.push("<div style='padding:4px 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:80px 1fr 80px;gap:6px;'><span class='muted small'>"+escapeHtml(dl)+"</span><span>"+(s.mood?moodEmoji[s.mood]+" "+moodLabels[s.mood]:"—")+"</span><span style='color:var(--t1200);'>"+(s.energy?"⚡"+s.energy+"/10":"—")+"</span></div>");}hist.innerHTML=rows.length?rows.join(""):"<span class='muted'>Nog geen logs</span>";}}
+let __medPhotoTarget=null;
+function medPhotoKey(name){return"medphoto:"+name.toLowerCase().replace(/\s+/g,"_");}
+function renderMedPhotoGrid(){const grid=el("medPhotoGrid");if(!grid)return;grid.innerHTML="";for(const m of medInfo){const photo=localStorage.getItem(medPhotoKey(m.name))||"";const card=document.createElement("div");card.className="medPhotoCard";card.innerHTML=(photo?"<img src='"+photo+"' alt='"+escapeHtml(m.name)+"'/>":" <div style='width:100%;height:80px;background:color-mix(in srgb,var(--accent) 10%,var(--card));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:28px;'>📷</div>")+"<div class='medPhotoName'>"+escapeHtml(m.name)+"</div>";card.addEventListener("click",()=>{__medPhotoTarget=m.name;const inp=el("medPhotoInput");if(inp)inp.click();});grid.appendChild(card);}}
+function initMedPhoto(){const inp=el("medPhotoInput");if(!inp)return;inp.addEventListener("change",(ev)=>{const file=ev.target.files&&ev.target.files[0];if(!file||!__medPhotoTarget)return;const reader=new FileReader();reader.onload=()=>{const img=new Image();img.onload=()=>{const canvas=document.createElement("canvas");const maxW=300;const scale=Math.min(1,maxW/img.width);canvas.width=img.width*scale;canvas.height=img.height*scale;canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);localStorage.setItem(medPhotoKey(__medPhotoTarget),canvas.toDataURL("image/jpeg",0.7));toast("Foto opgeslagen");renderMedPhotoGrid();__medPhotoTarget=null;};img.src=String(reader.result);};reader.readAsDataURL(file);ev.target.value="";});}
+function afsRead(){try{return JSON.parse(localStorage.getItem("afspraken:v1")||"[]");}catch(e){return[];}}
+function afsWrite(list){localStorage.setItem("afspraken:v1",JSON.stringify(list));}
+function afsRender(){const today=ymd(new Date());const list=afsRead().sort((a,b)=>a.datum.localeCompare(b.datum));const komend=list.filter(a=>a.datum>=today);const voorbij=list.filter(a=>a.datum<today).reverse();function renderList(items,elId){const box=el(elId);if(!box)return;if(items.length===0){box.innerHTML="<span class='muted'>Geen afspraken</span>";return;}box.innerHTML=items.map(a=>{const realIdx=list.indexOf(a);return"<div class='afspraakCard'><div class='row' style='justify-content:space-between;'><div><div style='font-weight:900;'>"+escapeHtml(fmtDateNL(a.datum))+(a.tijd?" "+escapeHtml(a.tijd):"")+"</div><div class='muted small'>"+escapeHtml(a.arts||"")+"</div></div><button class='btn' style='font-size:11px;padding:6px 10px;' onclick='afsDelete("+realIdx+")'>Wis</button></div>"+(a.nota?"<div class='small muted' style='margin-top:6px;'>"+escapeHtml(a.nota)+"</div>":"")+"</div>";}).join("");}renderList(komend,"afsListKomend");renderList(voorbij,"afsListVoorbij");}
+function afsDelete(idx){if(!confirm("Afspraak verwijderen?"))return;const list=afsRead();list.splice(idx,1);afsWrite(list);afsRender();toast("Verwijderd");}
+function afsSave(){const datum=(el("afsDatum").value||"").trim();if(!datum){toast("Vul een datum in");return;}afsWrite([...afsRead(),{datum,tijd:(el("afsTijd").value||"").trim(),arts:(el("afsArts").value||"").trim(),nota:(el("afsNota").value||"").trim()}]);el("afsDatum").value="";el("afsTijd").value="";el("afsArts").value="";el("afsNota").value="";afsRender();toast("Afspraak opgeslagen");}
+function initAfspraken(){if(el("afsDatum"))el("afsDatum").value=ymd(new Date());if(el("btnSaveAfs"))el("btnSaveAfs").addEventListener("click",afsSave);if(el("btnAfsCopy"))el("btnAfsCopy").addEventListener("click",()=>{const list=afsRead().sort((a,b)=>a.datum.localeCompare(b.datum));if(list.length===0){toast("Geen afspraken");return;}copyText(list.map(a=>{let s=fmtDateNL(a.datum);if(a.tijd)s+=" "+a.tijd;if(a.arts)s+=" - "+a.arts;if(a.nota)s+="\n  "+a.nota;return s;}).join("\n\n"));toast("Gekopieerd");});if(el("btnAfsPDF"))el("btnAfsPDF").addEventListener("click",()=>{const list=afsRead().sort((a,b)=>a.datum.localeCompare(b.datum));const html="<!DOCTYPE html><html><head><meta charset='utf-8'/><title>Afspraken</title><style>body{font-family:sans-serif;margin:40px;}</style></head><body><h1>Afspraken Rob</h1>"+list.map(a=>"<div style='border:1px solid #ddd;border-radius:8px;padding:12px;margin:8px 0;'><div style='font-weight:bold;'>"+escapeHtml(fmtDateNL(a.datum))+(a.tijd?" "+escapeHtml(a.tijd):"")+"</div><div>"+escapeHtml(a.arts||"")+"</div>"+(a.nota?"<div>"+escapeHtml(a.nota)+"</div>":"")+"</div>").join("")+"</body></html>";const blob=new Blob([html],{type:"text/html;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="afspraken.html";a.click();URL.revokeObjectURL(a.href);toast("Download gestart");});}
+function gotoNood(){try{switchView("nood");window.scrollTo(0,0);}catch(e){}}
+
+function renderBeheerList(){
+  const wrap=el("beheerList");if(!wrap)return;
+  if(schedule.length===0){wrap.innerHTML="<div class='muted small'>Geen medicijnen. Voeg er een toe hierboven.</div>";return;}
+  const days=["Zo","Ma","Di","Wo","Do","Vr","Za"];
+  wrap.innerHTML="";
+  // Group by time for display
+  const byTime={};
+  schedule.forEach((b,idx)=>{
+    const key=b.time;
+    if(!byTime[key])byTime[key]=[];
+    b.items.forEach(item=>{byTime[key].push({item,rule:b.rule,schedIdx:idx,itemIdx:b.items.indexOf(item)});});
+  });
+  // Render each entry
+  schedule.forEach((block,si)=>{
+    block.items.forEach((item,ii)=>{
+      const card=document.createElement("div");
+      card.style.cssText="border:1px solid var(--border);border-radius:13px;padding:11px;margin:7px 0;background:var(--card)";
+      const ruleText=block.rule.type==="daily"?"Dagelijks":("Wekelijks: "+block.rule.by.map(d=>days[d]).join(", "));
+      card.innerHTML="<div style='display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start'>"
+        +"<div><div style='font-weight:900;font-size:14px'>"+getItemIcon(item)+" "+escapeHtml(item)+"</div>"
+        +"<div class='muted small'>"+escapeHtml(block.time)+" · "+escapeHtml(ruleText)+"</div></div>"
+        +"<div class='row' style='gap:5px'>"
+        +"<button class='btn' style='font-size:11px;padding:5px 8px' onclick='beheerEdit("+si+","+ii+")'>Wijzig</button>"
+        +"<button class='btn' style='font-size:11px;padding:5px 8px;border-color:color-mix(in srgb,var(--t2200) 50%,var(--border))' onclick='beheerDelete("+si+","+ii+")'>Wis</button>"
+        +"</div></div>";
+      wrap.appendChild(card);
+    });
+  });
+}
+
+function beheerDelete(si,ii){
+  if(!confirm("Verwijder '"+schedule[si].items[ii]+"'?"))return;
+  schedule[si].items.splice(ii,1);
+  if(schedule[si].items.length===0)schedule.splice(si,1);
+  saveSchedule(schedule);
+  renderBeheerList();
+  renderAll();
+  toast("Medicijn verwijderd");
+}
+
+function beheerEdit(si,ii){
+  const block=schedule[si];
+  const item=block.items[ii];
+  const newName=prompt("Naam & dosering:",item);
+  if(newName===null)return;
+  if(!newName.trim()){alert("Naam mag niet leeg zijn");return;}
+  const newTime=prompt("Tijdstip:",block.time);
+  if(newTime===null)return;
+  if(!/^\d{2}:\d{2}$/.test(newTime.trim())){alert("Gebruik formaat HH:MM bijv. 08:00");return;}
+  // Update item name
+  block.items[ii]=newName.trim();
+  // Update time - move to different block if needed
+  if(newTime.trim()!==block.time){
+    block.items.splice(ii,1);
+    if(block.items.length===0)schedule.splice(si,1);
+    // Find existing block at new time with same rule
+    const existing=schedule.find(b=>b.time===newTime.trim()&&b.rule.type===block.rule.type);
+    if(existing)existing.items.push(newName.trim());
+    else schedule.push({time:newTime.trim(),items:[newName.trim()],rule:block.rule});
+    schedule.sort((a,b)=>a.time.localeCompare(b.time));
+  }
+  saveSchedule(schedule);
+  renderBeheerList();
+  renderAll();
+  toast("Medicijn bijgewerkt");
+}
+
+function beheerAdd(){
+  const time=(el("bTime").value||"").trim();
+  const name=(el("bName").value||"").trim();
+  if(!time||!name){toast("Vul tijdstip en naam in");return;}
+  if(!/^\d{2}:\d{2}$/.test(time)){toast("Tijdstip: gebruik HH:MM bijv. 08:00");return;}
+  const ruleType=el("bRule").value;
+  let rule;
+  if(ruleType==="daily"){
+    rule={type:"daily"};
+  } else {
+    const checked=[...document.querySelectorAll("#bDaysWrap input[type=checkbox]:checked")].map(c=>Number(c.value));
+    if(checked.length===0){toast("Kies minimaal 1 dag");return;}
+    rule={type:"weekly",by:checked};
+  }
+  // Add to existing block at same time+rule or create new
+  const existing=schedule.find(b=>b.time===time&&b.rule.type===ruleType&&
+    (ruleType==="daily"||(b.rule.by||[]).join(",")===rule.by.join(",")));
+  if(existing){existing.items.push(name);}
+  else{schedule.push({time,items:[name],rule});schedule.sort((a,b)=>a.time.localeCompare(b.time));}
+  saveSchedule(schedule);
+  el("bTime").value="";el("bName").value="";
+  renderBeheerList();
+  renderAll();
+  toast("Medicijn toegevoegd ✅");
+}
+
+function initBeheer(){
+  if(el("btnBeheerAdd"))el("btnBeheerAdd").addEventListener("click",beheerAdd);
+  if(el("bRule"))el("bRule").addEventListener("change",()=>{
+    const weekly=el("bRule").value==="weekly";
+    if(el("bDaysWrap"))el("bDaysWrap").style.display=weekly?"block":"none";
+  });
+}
+
+
+// ── RODE BADGE ──
+function updateTabBadge(){
+  const badge=el("tabBadge");if(!badge)return;
+  const today=new Date();const day=ymd(today);
+  const doses=getDosesForDate(today);
+  const now=new Date();
+  const missed=doses.filter(d=>{
+    const due=parseTimeToDate(today,d.time);
+    return due<now&&!readTaken(day,d.time);
+  });
+  badge.style.display=missed.length>0?"inline":"none";
+  badge.textContent=missed.length>0?String(missed.length):"";
+}
+
+// ── MAANDOVERZICHT ──
+let maandOffset=0;
+function renderMaandGrid(){
+  const now=new Date();
+  const year=now.getFullYear();
+  const month=now.getMonth()+maandOffset;
+  const d=new Date(year,month,1);
+  const label=d.toLocaleDateString("nl-NL",{month:"long",year:"numeric"});
+  if(el("maandLabel"))el("maandLabel").textContent=label;
+  const grid=el("maandGrid");if(!grid)return;
+  grid.innerHTML="";
+  // Day headers Ma-Zo
+  const days=["Ma","Di","Wo","Do","Vr","Za","Zo"];
+  days.forEach(d=>{
+    const h=document.createElement("div");
+    h.style.cssText="font-weight:900;color:var(--muted);padding:2px 0;font-size:10px";
+    h.textContent=d;grid.appendChild(h);
+  });
+  // First day of month (0=Sun...6=Sat → convert to Mon-based)
+  let startDow=new Date(d.getFullYear(),d.getMonth(),1).getDay();
+  startDow=(startDow+6)%7; // Mon=0
+  for(let i=0;i<startDow;i++){
+    const empty=document.createElement("div");grid.appendChild(empty);
+  }
+  const daysInMonth=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+  const todayStr=ymd(new Date());
+  for(let day=1;day<=daysInMonth;day++){
+    const dateObj=new Date(d.getFullYear(),d.getMonth(),day);
+    const dateStr=ymd(dateObj);
+    const doses=getDosesForDate(dateObj);
+    const done=doses.filter(x=>readTaken(dateStr,x.time)).length;
+    const total=doses.length;
+    const isFuture=dateStr>todayStr;
+    const cell=document.createElement("div");
+    cell.style.cssText="border-radius:7px;padding:3px 1px;font-size:11px;text-align:center;cursor:default;";
+    if(total===0||isFuture){
+      cell.style.background="color-mix(in srgb,var(--border) 40%,transparent)";
+      cell.style.color="var(--muted)";
+    } else if(done===total){
+      cell.style.background="color-mix(in srgb,var(--t1200) 25%,transparent)";
+      cell.style.color="var(--t1200)";
+    } else if(done===0){
+      cell.style.background="color-mix(in srgb,var(--t2200) 20%,transparent)";
+      cell.style.color="var(--t2200)";
+    } else {
+      cell.style.background="color-mix(in srgb,var(--t1600) 25%,transparent)";
+      cell.style.color="var(--t1600)";
+    }
+    if(dateStr===todayStr)cell.style.fontWeight="900";
+    cell.textContent=String(day);
+    grid.appendChild(cell);
+  }
+}
+function initMaand(){
+  if(el("btnPrevMaand"))el("btnPrevMaand").addEventListener("click",()=>{maandOffset--;renderMaandGrid();});
+  if(el("btnNextMaand"))el("btnNextMaand").addEventListener("click",()=>{maandOffset++;renderMaandGrid();});
+}
+
+
+// ── AHI GRAFIEK ──
+function renderAhiChart(){
+  const wrap=el("ahiChartWrap");const stats=el("ahiStats");
+  if(!wrap)return;
+  wrap.innerHTML="";
+  const today=new Date();const vals=[];
+  for(let i=29;i>=0;i--){
+    const d=new Date(today);d.setDate(today.getDate()-i);
+    const h=healthRead(ymd(d));
+    vals.push({date:d,val:h&&h.ahi!=null?Number(h.ahi):null});
+  }
+  const present=vals.filter(v=>v.val!=null);
+  const maxVal=present.length?Math.max(...present.map(v=>v.val),10):10;
+  vals.forEach((v,i)=>{
+    const col=document.createElement("div");
+    col.style.cssText="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:1px;height:80px";
+    const bar=document.createElement("div");
+    const h=v.val!=null?Math.max(4,Math.round((v.val/maxVal)*68)):2;
+    const color=v.val==null?"var(--border)":v.val<=5?"var(--t1200)":v.val<=15?"var(--t1600)":"var(--t2200)";
+    bar.style.cssText="width:80%;border-radius:3px 3px 0 0;background:"+color+";height:"+h+"px";
+    col.appendChild(bar);
+    if(i%7===0||i===29){
+      const lbl=document.createElement("div");
+      lbl.style.cssText="font-size:8px;color:var(--muted);text-align:center";
+      lbl.textContent=v.date.toLocaleDateString("nl-NL",{day:"2-digit",month:"2-digit"});
+      col.appendChild(lbl);
+    }
+    wrap.appendChild(col);
+  });
+  if(stats&&present.length){
+    const avg=(present.reduce((a,b)=>a+b.val,0)/present.length).toFixed(1);
+    stats.textContent="Gemiddeld: "+avg+" | Laagste: "+Math.min(...present.map(v=>v.val))+" | Hoogste: "+Math.max(...present.map(v=>v.val))+" | "+present.length+" metingen";
+  } else if(stats){stats.textContent="Nog geen AHI data";}
+}
+
+// ── GEWICHT GRAFIEK ──
+function renderWeightChart(){
+  const wrap=el("weightChartWrap");const stats=el("weightStats");
+  if(!wrap)return;
+  wrap.innerHTML="";
+  const today=new Date();const vals=[];
+  for(let i=29;i>=0;i--){
+    const d=new Date(today);d.setDate(today.getDate()-i);
+    const h=healthRead(ymd(d));
+    vals.push({date:d,val:h&&h.weight!=null?Number(h.weight):null});
+  }
+  const present=vals.filter(v=>v.val!=null);
+  if(!present.length){
+    if(stats)stats.textContent="Nog geen gewicht data";
+    return;
+  }
+  const minVal=Math.min(...present.map(v=>v.val))-1;
+  const maxVal=Math.max(...present.map(v=>v.val))+1;
+  const range=maxVal-minVal||1;
+  vals.forEach((v,i)=>{
+    const col=document.createElement("div");
+    col.style.cssText="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:1px;height:80px";
+    const bar=document.createElement("div");
+    const h=v.val!=null?Math.max(4,Math.round(((v.val-minVal)/range)*68)):2;
+    bar.style.cssText="width:80%;border-radius:3px 3px 0 0;background:"+(v.val!=null?"var(--t0800)":"var(--border)")+";height:"+h+"px";
+    col.appendChild(bar);
+    if(i%7===0||i===29){
+      const lbl=document.createElement("div");
+      lbl.style.cssText="font-size:8px;color:var(--muted);text-align:center";
+      lbl.textContent=v.date.toLocaleDateString("nl-NL",{day:"2-digit",month:"2-digit"});
+      col.appendChild(lbl);
+    }
+    wrap.appendChild(col);
+  });
+  if(stats){
+    const avg=(present.reduce((a,b)=>a+b.val,0)/present.length).toFixed(1);
+    const first=present[0].val,last=present[present.length-1].val;
+    const diff=(last-first).toFixed(1);
+    const trend=diff>0?"+"+diff+" kg":diff+" kg";
+    stats.textContent="Huidig: "+last+" kg | Gem: "+avg+" kg | Trend: "+trend+" ("+present.length+" metingen)";
+  }
+}
+
+// ── TIJDSTIP VERSCHUIVEN ──
+function shiftTodayTimes(){
+  const mins=prompt("Verschuif alle tijdstippen van vandaag met hoeveel minuten?\n(positief = later, negatief = eerder)\nBijv: 60 voor 1 uur later");
+  if(mins===null)return;
+  const n=parseInt(mins);
+  if(isNaN(n)||n===0){toast("Ongeldige waarde");return;}
+  const day=el("datePicker")?el("datePicker").value:ymd(new Date());
+  const key="timeshift:"+day;
+  const existing=Number(localStorage.getItem(key)||"0");
+  localStorage.setItem(key,String(existing+n));
+  toast("Tijdstippen verschoven met "+(n>0?"+":"")+n+" min");
+  renderAll();
+  scheduleInAppNotifications();
+}
+
+// getDosesForDate with shift support
+function getDosesForDate(dateObj){
+  const doses=_getDosesBase(dateObj);
+  const day=ymd(dateObj);
+  const shift=Number(localStorage.getItem("timeshift:"+day)||"0");
+  if(!shift)return doses;
+  return doses.map(d=>{
+    const[h,m]=d.time.split(":").map(Number);
+    const total=h*60+m+shift;
+    const nh=Math.max(0,Math.min(23,Math.floor(total/60)));
+    const nm=Math.max(0,Math.min(59,((total%60)+60)%60));
+    return{...d,time:String(nh).padStart(2,"0")+":"+String(nm).padStart(2,"0")};
+  });
+}
+
+// ── WEEKRAPPORT ──
+function buildFullWeekrapport(){
+  const mon=mondayOfWeek(new Date());
+  const lines=["📊 WEEKRAPPORT MEDAPP ROB","Week van "+mon.toLocaleDateString("nl-NL",{day:"2-digit",month:"long"}),""];
+  lines.push("MEDICATIE:");
+  let totalDone=0,totalAll=0;
+  for(let i=0;i<7;i++){
+    const d=new Date(mon);d.setDate(mon.getDate()+i);
+    const doses=getDosesForDate(d);
+    const day=ymd(d);
+    const done=doses.filter(x=>readTaken(day,x.time)).length;
+    const total=doses.length;
+    totalDone+=done;totalAll+=total;
+    const pct=total===0?0:Math.round((done/total)*100);
+    const icon=pct===100?"✅":pct===0?"❌":"🟡";
+    lines.push(icon+" "+d.toLocaleDateString("nl-NL",{weekday:"long",day:"2-digit",month:"2-digit"})+": "+pct+"% ("+done+"/"+total+")");
+  }
+  lines.push("Totaal: "+Math.round((totalDone/totalAll)*100)+"% ("+totalDone+"/"+totalAll+")");
+  lines.push("Streak: "+computeStreakDays()+" dagen 🔥");
+  lines.push("");
+  lines.push("GEZONDHEID (gemiddeld deze week):");
+  const fields={sleep:"Slaap",cpap:"CPAP uren",ahi:"AHI",pain:"Pijn",rls:"RLS",weight:"Gewicht"};
+  const sums={};const counts={};
+  for(let i=0;i<7;i++){
+    const d=new Date(mon);d.setDate(mon.getDate()+i);
+    const h=healthRead(ymd(d))||{};
+    for(const k of Object.keys(fields)){
+      if(h[k]!=null){sums[k]=(sums[k]||0)+Number(h[k]);counts[k]=(counts[k]||0)+1;}
+    }
+  }
+  for(const[k,label] of Object.entries(fields)){
+    if(counts[k])lines.push(label+": "+(sums[k]/counts[k]).toFixed(1)+(k==="weight"?" kg":""));
+  }
+  return lines.join("\n");
+}
+
+function renderWeekRapport(){
+  const box=el("weekRapportBox");
+  if(!box)return;
+  box.textContent=buildFullWeekrapport();
+}
+
+function init(){
+  window.__activeView="vandaag";
+  el("datePicker").value=ymd(new Date());
+  const s=getSettings();
+  el("warnSelect").value=String(s.warnMin);
+  el("themeSelect").value=s.theme;
+  el("soundSelect").value=s.sound;
+  applyTheme(s.theme);
+  el("btnToday").addEventListener("click",()=>{el("datePicker").value=ymd(new Date());renderAll();scheduleInAppNotifications();});
+  el("datePicker").addEventListener("change",()=>{renderAll();scheduleInAppNotifications();});
+  el("warnSelect").addEventListener("change",()=>{const s=getSettings();s.warnMin=Number(el("warnSelect").value);saveSettings(s);toast("Waarschuwing gezet");scheduleInAppNotifications();});
+  el("themeSelect").addEventListener("change",()=>{const s=getSettings();s.theme=el("themeSelect").value;saveSettings(s);applyTheme(s.theme);toast("Nachtmodus aangepast");});
+  el("soundSelect").addEventListener("change",()=>{const s=getSettings();s.sound=el("soundSelect").value;saveSettings(s);toast("Geluid aangepast");});
+  el("btnReset").addEventListener("click",resetToday);
+  el("btnExport").addEventListener("click",exportCSV);
+  el("btnNotify").addEventListener("click",enableNotifications);
+  el("btnNotWell").addEventListener("click",gotoNood);
+  el("btnReschedule").addEventListener("click",()=>{scheduleInAppNotifications();toast("Meldingen gepland");});
+  el("btnSaveNotes").addEventListener("click",saveNotes);
+  el("btnSaveNf").addEventListener("click",saveNf);
+  for(const t of document.querySelectorAll(".tab"))t.addEventListener("click",()=>switchView(t.dataset.view));
+  if(el("btnCopyNoodkaart")){el("btnCopyNoodkaart").addEventListener("click",()=>{const txt=(el("noodkaartText")?el("noodkaartText").textContent:"")||"";copyText(txt.trim()?txt:"Geen noodkaart.");toast("Noodkaart gekopieerd");});}
+  if(el("btnSaveHealth"))el("btnSaveHealth").addEventListener("click",saveGezondheid);
+  if(el("btnShiftTime"))el("btnShiftTime").addEventListener("click",shiftTodayTimes);
+  if(el("btnWeekRapportCopy"))el("btnWeekRapportCopy").addEventListener("click",()=>{copyText(buildFullWeekrapport());toast("Gekopieerd");});
+  if(el("btnWeekRapportShare"))el("btnWeekRapportShare").addEventListener("click",async()=>{const t=buildFullWeekrapport();const url="https://wa.me/?text="+encodeURIComponent(t);window.open(url,"_blank");});
+  setInterval(()=>{const s=getSettings();if(s.theme==="auto20")applyTheme("auto20");},60*1000);
+  setInterval(()=>renderAll(),30*1000);
+  setInterval(()=>remindMissedDose(),30000);
+  setupAssistant();
+  initPijn();
+  initAfspraken();
+  initBeheer();
+  initMaand();
+  checkAutoBackup();
+  updateAutoBackupStatus();
+  setAccent("vandaag");
+  renderAll();
+  scheduleInAppNotifications();
+}
+init();
+</script>
+</body>
+</html>
